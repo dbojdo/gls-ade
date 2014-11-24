@@ -6,6 +6,8 @@
  
 namespace Webit\GlsAde\Api;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Class PostCodeApi
  * @author Daniel Bojdo <daniel.bojdo@web-it.eu>
@@ -20,14 +22,12 @@ class PostCodeApi extends AbstractSessionAwareApi
      *
      * @param string $country Kod kraju (zgodny z ISO 3166-1 alfa-2)
      * @param string $postCode Kod pocztowy
-     * @return array
+     * @return string
      */
     public function getCity($country, $postCode)
     {
         $response = $this->request('adeZip_GetCity', array('country' => $country, 'zipcode' => $postCode));
-//        array(
-//            city | string - Nazwa miejscowości
-//        )
-        return $response;
+
+        return $response->get('city');
     }
 }

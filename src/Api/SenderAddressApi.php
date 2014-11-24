@@ -6,6 +6,8 @@
  
 namespace Webit\GlsAde\Api;
 
+use Doctrine\Common\Collections\ArrayCollection;
+
 /**
  * Class SenderAddressApi
  * @author Daniel Bojdo <daniel.bojdo@web-it.eu>
@@ -35,9 +37,9 @@ class SenderAddressApi extends AbstractSessionAwareApi
      */
     public function getSenderAddressStatus()
     {
+        /** @var ArrayCollection $response */
         $response = $this->request('adeSendAddr_GetStatus');
-
-        return $response;
+        return $response->get('status');
     }
 
     /**
@@ -53,6 +55,7 @@ class SenderAddressApi extends AbstractSessionAwareApi
      */
     public function getSenderAddressDictionary()
     {
+        /** @var ArrayCollection $response */
         $response = $this->request('adeSendAddr_GetDictionary');
 
         return $response;

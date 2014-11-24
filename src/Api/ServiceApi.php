@@ -6,6 +6,10 @@
  
 namespace Webit\GlsAde\Api;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Webit\GlsAde\Model\MaxParcelWeight;
+use Webit\GlsAde\Model\ServiceList;
+
 /**
  * Class ServiceApi
  * @author Daniel Bojdo <daniel.bojdo@web-it.eu>
@@ -18,15 +22,13 @@ class ServiceApi extends AbstractSessionAwareApi
      * Metoda podaje informacje na temat dostępnych dla użytkownika usług (serwisów) dla przesyłek.
      * @see https://ade-test.gls-poland.com/adeplus/pm1/html/webapi/functions/f_srv_getallowed.htm
      *
-     * @return array
+     * @return ServiceList
      */
     public function getAllowedServices()
     {
+        /** @var ServiceList $response */
         $response = $this->request('adeServices_GetAllowed');
-//        array(
-//            srv_ade | string - Usługi zapisane w standardzie ADE. Zawartość elementu użyta na wejściu jest ignorowana. Przykład zawartości: COD 120.00PLN,EXW,ROD,POD,12:00.
-//            srv_bool | ServicesBool  - Tablica z listą usług.
-//        )
+
         return $response;
     }
 
@@ -38,11 +40,10 @@ class ServiceApi extends AbstractSessionAwareApi
      */
     public function getMaxCodAmount()
     {
+        /** @var ArrayCollection $response */
         $response = $this->request('adeServices_GetMaxCOD');
-//        array(
-//            cod_max | string - maksymalna kwota usługi COD.
-//        )
-        return $response;
+
+        return $response->get('cod_max');
     }
 
     /**
@@ -50,15 +51,13 @@ class ServiceApi extends AbstractSessionAwareApi
      * Przesyłka może składać się z kilku paczek, zatem przesyłka może mieć wagę wiekszą niż paczka.
      * @see https://ade-test.gls-poland.com/adeplus/pm1/html/webapi/functions/f_srv_get_max_parcelweights.htm
      *
-     * @return array
+     * @return MaxParcelWeight
      */
     public function getMaxParcelsWeight()
     {
+        /** @var MaxParcelWeight $response */
         $response = $this->request('adeServices_GetMaxParcelWeights');
-//        array(
-//            weight_max_national | string - maksymalna waga paczki krajowej wyrażona w kg.
-//            weight_max_international | string  - maksymalna waga paczki międzynarodowej wyrażona w kg.
-//        )
+
         return $response;
     }
 
@@ -77,11 +76,9 @@ class ServiceApi extends AbstractSessionAwareApi
      */
     public function getGuaranteedServices($zipCode)
     {
+        /** @var ServiceList $response */
         $response = $this->request('adeServices_GetGuaranteed', array('zipcode' => $zipCode));
-//        array(
-//            srv_ade | string - wykaz usług gwarantowanych (podzbiór usług zapisanych w standardzie ADE).
-//            srv_bool | ServicesBool  - Tablica z listą usług.
-//        )
+
         return $response;
     }
 }

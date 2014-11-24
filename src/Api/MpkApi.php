@@ -30,10 +30,8 @@ class MpkApi extends AbstractSessionAwareApi
     public function getMpkStatus()
     {
         $response = $this->request('adePfc_GetStatus');
-//        array(
-//            status | byte - status usługi MPK (0 - nieaktywna, 1 - zdefiniowana, bez możliwości zmiany, 2 - dostęp do listy/słownika)
-//        )
-        return $response;
+
+        return $response->get('status');
     }
 
     /**

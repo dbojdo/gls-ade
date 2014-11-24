@@ -7,6 +7,7 @@
 namespace Webit\GlsAde\Model;
 
 use JMS\Serializer\Annotation as JMS;
+use Traversable;
 
 /**
  * Class ServicesBool
@@ -17,7 +18,7 @@ use JMS\Serializer\Annotation as JMS;
  * W przypadku użycia struktury na wejściu, nie ma koniecznośći nadawania wartości wszystkim elementom tablicy.
  * Opis użytych skrótów znajduje się w rozdziale Usługi zapisane w standardzie ADE.
  */
-class ServicesBool {
+class ServicesBool implements \IteratorAggregate {
 
     /**
      * COD (Cash-Service) - Pobranie za towar
@@ -89,12 +90,12 @@ class ServicesBool {
      * (Ident-Service) - Zwrot podpisanej umowy, po uprzedniej identyfikacji odbiorcy przez kuriera
      *
      * @JMS\Type("integer")
-     * @JMS\SerializedName("iden")
+     * @JMS\SerializedName("ident")
      * @JMS\Groups({"input"})
      *
      * @var int
      */
-    private $iden;
+    private $ident;
 
     /**
      * (DeliveryAtWork-Service) - Doręczenie paczki do rąk własnych odbiorcy lub zdefiniowanego miejsca w firmie
@@ -177,7 +178,7 @@ class ServicesBool {
      * (ShopReturn-Service) - Zwrot paczki w dowolnym punkcie ParcelShop
      *
      * @JMS\Type("integer")
-     * @JMS\SerializedName("ses")
+     * @JMS\SerializedName("srs")
      * @JMS\Groups({"input"})
      *
      * @var int
@@ -267,17 +268,17 @@ class ServicesBool {
     /**
      * @return int
      */
-    public function getIden()
+    public function getIdent()
     {
-        return $this->iden;
+        return $this->ident;
     }
 
     /**
-     * @param int $iden
+     * @param int $ident
      */
-    public function setIden($iden)
+    public function setIdent($ident)
     {
-        $this->iden = $iden;
+        $this->ident = $ident;
     }
 
     /**
@@ -424,6 +425,31 @@ class ServicesBool {
         $this->srs = $srs;
     }
 
-
+    /**
+     * (PHP 5 &gt;= 5.0.0)<br/>
+     * Retrieve an external iterator
+     * @link http://php.net/manual/en/iteratoraggregate.getiterator.php
+     * @return Traversable An instance of an object implementing <b>Iterator</b> or
+     * <b>Traversable</b>
+     */
+    public function getIterator()
+    {
+        return new \ArrayIterator(array(
+            'cod' => $this->getCod(),
+            'cod_amount' => $this->getCodAmount(),
+            'exw' => $this->getExw(),
+            'rod' => $this->getRod(),
+            'pod' => $this->getPod(),
+            'exc' => $this->getExc(),
+            'ident' => $this->getIdent(),
+            'daw' => $this->getDaw(),
+            'ps' => $this->getPs(),
+            'pr' => $this->getPr(),
+            's10' => $this->getS10(),
+            's12' => $this->getS12(),
+            'sat' => $this->getSat(),
+            'ow' => $this->getOw(),
+            'srs' => $this->getSrs()
+        ));
+    }
 }
- 

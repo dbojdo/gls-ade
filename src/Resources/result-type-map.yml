@@ -1,3 +1,7 @@
 result_type_map:
   adeProfile_GetIDs: ArrayCollection<Webit\GlsAde\Model\Profile>
   adeProfile_Change: Webit\GlsAde\Model\Profile
+  adeSendAddr_GetDictionary: ArrayCollection<Webit\GlsAde\Model\SenderAddress>
+  adeServices_GetMaxParcelWeights: Webit\GlsAde\Model\MaxParcelWeight
+  adeServices_GetGuaranteed: Webit\GlsAde\Model\ServiceList
+  adeServices_GetAllowed: Webit\GlsAde\Model\ServiceList
