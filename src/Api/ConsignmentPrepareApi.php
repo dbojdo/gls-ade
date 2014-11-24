@@ -6,7 +6,9 @@
  
 namespace Webit\GlsAde\Api;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Webit\GlsAde\Model\Consignment;
+use Webit\GlsAde\Model\ConsignmentDocuments;
 use Webit\GlsAde\Model\ConsignmentLabelModes;
 
 /**
@@ -29,7 +31,7 @@ class ConsignmentPrepareApi extends AbstractSessionAwareApi
     {
         $response = $this->request('adePreparingBox_Insert', array('consign_prep_data' => $consignment));
 
-        return $response;
+        return $response->get('id');
     }
 
     /**
@@ -47,12 +49,12 @@ class ConsignmentPrepareApi extends AbstractSessionAwareApi
      * @see https://ade-test.gls-poland.com/adeplus/pm1/html/webapi/functions/f_prepbox_getids.htm
      *
      * @param int $idStart
-     * @return array
+     * @return ArrayCollection
      */
     public function getConsignmentIds($idStart = 0)
     {
         $response = $this->request('adePreparingBox_GetConsignIDs', array('id_start' => $idStart));
-//          ConsignsIDsArray - Tablica z identyfikatorami przesyłek
+
         return $response;
     }
 
@@ -66,7 +68,7 @@ class ConsignmentPrepareApi extends AbstractSessionAwareApi
     public function getConsignment($id)
     {
         $response = $this->request('adePreparingBox_GetConsign', array('id' => $id));
-//        Consign - Dane przesyłki
+
         return $response;
     }
 
@@ -83,10 +85,8 @@ class ConsignmentPrepareApi extends AbstractSessionAwareApi
     public function deleteConsignment($id)
     {
         $response = $this->request('adePreparingBox_DeleteConsign', array('id' => $id));
-//        array(
-//            id | long - Identyfikator usuniętej przesyłki
-//          )
-        return $response;
+
+        return $response->get('id');
     }
 
     /**
@@ -96,15 +96,16 @@ class ConsignmentPrepareApi extends AbstractSessionAwareApi
      *
      * @param int $id
      * @param string $mode
-     * @return string
+     * @return \SplFileInfo
      */
     public function getConsignmentLabels($id, $mode = ConsignmentLabelModes::MODE_ONE_LABEL_ON_A4_PDF)
     {
         $response = $this->request('adePreparingBox_GetConsignLabels', array('id' => $id, 'mode' => $mode));
-//        array(
-//            labels | string - Plik z etykietami (zakodowany MIME base64)
-//        )
-        return $response;
+
+        $file = new \SplFileInfo(tempnam(sys_get_temp_dir(), 'label'));
+        file_put_contents($file->getPathname(), base64_decode($response->get('labels')));
+
+        return $file;
     }
 
     /**
@@ -114,15 +115,21 @@ class ConsignmentPrepareApi extends AbstractSessionAwareApi
      *
      * @param $id
      * @param string $mode
-     * @return string
+     * @return ConsignmentDocuments
      */
     public function getConsignmentDocuments($id, $mode = ConsignmentLabelModes::MODE_ONE_LABEL_ON_A4_PDF)
     {
         $response = $this->request('adePreparingBox_GetConsignDocs', array('id' => $id, $mode => $mode));
-//        array(
-//            labels | string - Plik z etykietami (zakodowany MIME base64)
-//            ident | string - Plik z drukiem IDENT (zakodowany MIME base64). Jeśli pusty, to brak jest w przesyłce usługi IDENT.
-//        )
-        return $response;
+
+        $labels = new \SplFileInfo(tempnam(sys_get_temp_dir(), 'label'));
+        file_put_contents($labels->getPathname(), base64_decode($response->get('labels')));
+
+        $ident = null;
+        if ($response->get('ident')) {
+            $ident = new \SplFileInfo(tempnam(sys_get_temp_dir(), 'ident'));
+            file_put_contents($labels->getPathname(), base64_decode($response->get('ident')));
+        }
+
+        return new ConsignmentDocuments($labels, $ident);
     }
 }

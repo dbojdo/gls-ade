@@ -6,6 +6,7 @@
  
 namespace Webit\GlsAde\Api;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Webit\GlsAde\Model\Consignment;
 use Webit\GlsAde\Model\ConsignmentLabelModes;
 use Webit\GlsAde\Model\Pickup;
@@ -36,7 +37,7 @@ class PickupApi extends AbstractSessionAwareApi
             array('consigns_ids' => $consignmentIds, 'desc' => $description)
         );
 
-        return $response;
+        return $response->get('id');
     }
 
     /**
@@ -55,7 +56,7 @@ class PickupApi extends AbstractSessionAwareApi
      * @see https://ade-test.gls-poland.com/adeplus/pm1/html/webapi/functions/f_pickup_get_ids.htm
      *
      * @param int $idStart
-     * @return array
+     * @return ArrayCollection
      */
     public function getPickupIds($idStart = 0)
     {
@@ -97,15 +98,16 @@ class PickupApi extends AbstractSessionAwareApi
      * @see https://ade-test.gls-poland.com/adeplus/pm1/html/webapi/functions/f_pickup_get_receipt.htm
      *
      * @param int $id
-     * @return string
+     * @return \SplFileInfo
      */
     public function getPickupReceipt($id, $mode = PickupReceiptModes::MODE_CONDENSED)
     {
         $response = $this->request('adePickup_GetReceipt', array('id' => $id, 'mode' => $mode));
-//        array(
-//            receipt | string - Plik z potwierdzeniem (zakodowany MIME base64)
-//        )
-        return $response;
+
+        $file = new \SplFileInfo(tempnam(sys_get_temp_dir(), 'receipt'));
+        file_put_contents($file->getPathname(), base64_decode($response->get('receipt')));
+
+        return $file;
     }
 
     /**
@@ -114,45 +116,49 @@ class PickupApi extends AbstractSessionAwareApi
      *
      * @param int $id
      * @param string $mode
-     * @return string
+     * @return \SplFileInfo
      */
     public function getPickupLabels($id, $mode = ConsignmentLabelModes::MODE_ONE_LABEL_ON_A4_PDF)
     {
         $response = $this->request('adePickup_GetLabels', array('id' => $id, 'mode' => $mode));
-//        array(
-//            labels | string - Plik z etykietami (zakodowany MIME base64)
-//        )
-        return $response;
+
+        $file = new \SplFileInfo(tempnam(sys_get_temp_dir(), 'label'));
+        file_put_contents($file->getPathname(), base64_decode($response->get('labels')));
+
+        return $file;
     }
 
     /**
      * Metoda pobiera druki IDENT z potwierdzenia nadania.
      * @see https://ade-test.gls-poland.com/adeplus/pm1/html/webapi/functions/f_pickup_get_ident.htm
+     * @param int $id
+     * @return \SplFileInfo
      */
     public function getIdentPrint($id)
     {
         $response = $this->request('adePickup_GetIdent', array('id' => $id));
-//        array(
-//            ident | string - Plik z drukami IDENT (zakodowany MIME base64)
-//        )
-        return $response;
+        $file = new \SplFileInfo(tempnam(sys_get_temp_dir(), 'ident'));
+        file_put_contents($file->getPathname(), base64_decode($response->get('ident')));
+
+        return $file;
     }
 
     /**
      * Pozwala pobrać z systemu etykiety dla przesyłki znajdującej się na dowolnym potwierdzeniu nadania.
      * @see https://ade-test.gls-poland.com/adeplus/pm1/html/webapi/functions/f_pikcup_get_consign_labels.htm
      *
-     * @param $id
+     * @param int $id
      * @param string $mode
-     * @return string
+     * @return \SplFileInfo
      */
     public function getConsignmentLabels($id, $mode = ConsignmentLabelModes::MODE_ONE_LABEL_ON_A4_PDF)
     {
-        $response = $this->request('', array('id' => $id, 'mode' => $mode));
-//        array(
-//            labels | string - Plik z etykietami (zakodowany MIME base64)
-//        )
-        return $response;
+        $response = $this->request('adePickup_GetConsignLabels', array('id' => $id, 'mode' => $mode));
+
+        $file = new \SplFileInfo(tempnam(sys_get_temp_dir(), 'label'));
+        file_put_contents($file->getPathname(), base64_decode($response->get('labels')));
+
+        return $file;
     }
 
     /**
