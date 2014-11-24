@@ -1,0 +1,24 @@
+{
+    "name" : "webit/gls-ade",
+    "type" : "library",
+    "description": "Web-IT GLS-ADE SDK",
+    "authors": [
+        {
+            "name": "Daniel Bojdo",
+            "email": "daniel.bojdo@web-it.eu"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "doctrine/collections": "~1.2",
+        "jms/serializer": "~0.15"
+    },
+    "require-dev": {
+        "phpspec/phpspec": "2.1.*@dev"
+    },
+    "autoload": {
+        "psr-4": {
+            "Webit\\GlsAde\\": "src/"
+        }
+    }
+}
