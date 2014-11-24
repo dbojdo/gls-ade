@@ -2,9 +2,8 @@
 /**
  * ResultTypeMapInterface.php
  *
- * @author dbojdo - Daniel Bojdo <daniel.bojdo@dxi.eu>
+ * @author dbojdo - Daniel Bojdo <daniel.bojdo@web-it.eu>
  * Created on Nov 24, 2014, 11:32
- * Copyright (C) DXI Ltd
  */
 
 namespace Webit\GlsAde\Api\ResultMap;
