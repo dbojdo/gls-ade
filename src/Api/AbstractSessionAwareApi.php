@@ -65,6 +65,7 @@ abstract class AbstractSessionAwareApi extends AbstractApi implements SessionAwa
     /**
      * @param string $soapFunction
      * @param array $arguments
+     * @return mixed
      */
     protected function request($soapFunction, $arguments = array())
     {

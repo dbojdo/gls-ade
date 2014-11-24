@@ -18,10 +18,8 @@ class AuthApi extends AbstractApi
     public function login($userName, $password)
     {
         $response = $this->request('adeLogin', array('user_name' => $userName, 'password' => $password));
-//        array(
-//            session | string - Identyfikator sesji
-//        )
-        return $response;
+
+        return $response['session'];
     }
 
     /**
@@ -34,9 +32,7 @@ class AuthApi extends AbstractApi
     public function logout($session)
     {
         $response = $this->request('adeLogout', array('session' => $session));
-//        array(
-//            session | string - Identyfikator usuniętej sesji
-//        )
-        return $response;
+
+        return $response['session'];
     }
 }

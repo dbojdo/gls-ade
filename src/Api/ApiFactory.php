@@ -20,6 +20,11 @@ class ApiFactory
      */
     private $soapClientFactory;
 
+    /**
+     * @var \SoapClient
+     */
+    private $soapClient;
+
     public function __construct(SoapClientFactory $soapClientFactory)
     {
         $this->soapClientFactory = $soapClientFactory;
@@ -31,7 +36,7 @@ class ApiFactory
     public function createAuthApi()
     {
         return new AuthApi(
-            $this->soapClientFactory->createSoapClient(self::GLS_ADE_WSDL)
+            $this->getSoapClient()
         );
     }
 
@@ -44,7 +49,7 @@ class ApiFactory
     public function createMpkApi(AuthApi $authApi, $username, $password)
     {
         return new MpkApi(
-            $this->soapClientFactory->createSoapClient(self::GLS_ADE_WSDL),
+            $this->getSoapClient(),
             $authApi,
             $username,
             $password
@@ -60,7 +65,7 @@ class ApiFactory
     public function createConsignmentPrepareApi(AuthApi $authApi, $username, $password)
     {
         return new ConsignmentPrepareApi(
-            $this->soapClientFactory->createSoapClient(self::GLS_ADE_WSDL),
+            $this->getSoapClient(),
             $authApi,
             $username,
             $password
@@ -76,7 +81,7 @@ class ApiFactory
     public function createProfileApi(AuthApi $authApi, $username, $password)
     {
         return new ProfileApi(
-            $this->soapClientFactory->createSoapClient(self::GLS_ADE_WSDL),
+            $this->getSoapClient(),
             $authApi,
             $username,
             $password
@@ -92,7 +97,7 @@ class ApiFactory
     public function createServiceApi(AuthApi $authApi, $username, $password)
     {
         return new ServiceApi(
-            $this->soapClientFactory->createSoapClient(self::GLS_ADE_WSDL),
+            $this->getSoapClient(),
             $authApi,
             $username,
             $password
@@ -108,7 +113,7 @@ class ApiFactory
     public function createSenderAddressApi(AuthApi $authApi, $username, $password)
     {
         return new SenderAddressApi(
-            $this->soapClientFactory->createSoapClient(self::GLS_ADE_WSDL),
+            $this->getSoapClient(),
             $authApi,
             $username,
             $password
@@ -124,7 +129,7 @@ class ApiFactory
     public function createPickupApi(AuthApi $authApi, $username, $password)
     {
         return new PickupApi(
-            $this->soapClientFactory->createSoapClient(self::GLS_ADE_WSDL),
+            $this->getSoapClient(),
             $authApi,
             $username,
             $password
@@ -140,10 +145,24 @@ class ApiFactory
     public function createPostCodeApi(AuthApi $authApi, $username, $password)
     {
         return new PostCodeApi(
-            $this->soapClientFactory->createSoapClient(self::GLS_ADE_WSDL),
+            $this->getSoapClient(),
             $authApi,
             $username,
             $password
         );
+    }
+
+    /**
+     * @return \SoapClient
+     */
+    private function getSoapClient()
+    {
+        if ($this->soapClient == null) {
+            $this->soapClient = $this->soapClientFactory->createSoapClient(self::GLS_ADE_WSDL, array(
+                'features' => SOAP_SINGLE_ELEMENT_ARRAYS
+            ));
+        }
+
+        return $this->soapClient;
     }
 }

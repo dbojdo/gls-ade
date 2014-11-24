@@ -42,8 +42,7 @@ abstract class AbstractApi
 
         try {
             $response = $this->client->__soapCall($soapFunction, $arguments);
-
-            return $response;
+            return (array) $response;
         } catch (\SoapFault $e) {
             // TODO: create appropriate exception
             throw $e;
