@@ -6,6 +6,9 @@
  
 namespace Webit\GlsAde\Api;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Webit\GlsAde\Model\Profile;
+
 /**
  * Class ProfileApi
  * @author Daniel Bojdo <daniel.bojdo@web-it.eu>
@@ -21,14 +24,13 @@ class ProfileApi extends AbstractSessionAwareApi
      * W większości przypadków użytkownik ma tylko jeden profil.
      * @see https://ade-test.gls-poland.com/adeplus/pm1/html/webapi/functions/f_profile_get_ids.htm
      *
-     * @return array
+     * @return ArrayCollection
      */
-    public function getProfileIds()
+    public function getProfiles()
     {
-        $response = $this->request('adeProfile_GetIDs');
+        $profiles = $this->request('adeProfile_GetIDs');
 
-        // ProfilesArray - Tablica z informacjami na temat dostępnych profili.
-        return $response;
+        return $profiles;
     }
 
     /**
@@ -36,13 +38,13 @@ class ProfileApi extends AbstractSessionAwareApi
      * @see https://ade-test.gls-poland.com/adeplus/pm1/html/webapi/functions/f_profile_change.htm
      *
      * @param int $profileId
-     * @return int
+     * @return Profile
      */
     public function changeProfile($profileId)
     {
-        $response = $this->request('adeProfile_Change', array('id' => $profileId));
+        $profile = $this->request('adeProfile_Change', array('id' => $profileId));
         // Profile - Tablica z informacjami na temat profilu, na który nastąpiła zmiana.
 
-        return $response;
+        return $profile;
     }
 }

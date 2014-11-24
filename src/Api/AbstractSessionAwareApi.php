@@ -6,6 +6,9 @@
  
 namespace Webit\GlsAde\Api;
 
+use JMS\Serializer\SerializerInterface;
+use Webit\GlsAde\Api\ResultMap\ResultTypeMapInterface;
+
 /**
  * Class AbstractSessionAwareApi
  * @author Daniel Bojdo <daniel.bojdo@web-it.eu>
@@ -32,9 +35,23 @@ abstract class AbstractSessionAwareApi extends AbstractApi implements SessionAwa
      */
     private $sessionId;
 
-    public function __construct(\SoapClient $client, $authApi, $username, $password)
-    {
-        parent::__construct($client);
+    /**
+     * @param \SoapClient $client
+     * @param SerializerInterface $serializer
+     * @param ResultTypeMapInterface $resultTypeMap
+     * @param $authApi
+     * @param $username
+     * @param $password
+     */
+    public function __construct(
+        \SoapClient $client,
+        SerializerInterface $serializer,
+        ResultTypeMapInterface $resultTypeMap,
+        $authApi,
+        $username,
+        $password
+    ) {
+        parent::__construct($client, $serializer, $resultTypeMap);
 
         $this->authApi = $authApi;
         $this->username = $username;

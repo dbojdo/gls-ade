@@ -1,14 +1,9 @@
 <?php
-require __DIR__.'/../vendor/autoload.php';
-
-use Webit\GlsAde\Api\ApiFactory;
-use Webit\GlsAde\Api\SoapClientFactory;
+/** @var \Webit\GlsAde\Api\Factory\ApiFactory $apiFactory */
+$apiFactory = require 'bootstrap.php';
 
 $username = 'my-test-username';
 $password = 'my-test-password';
-
-$clientFactory = new SoapClientFactory();
-$apiFactory = new ApiFactory($clientFactory);
 
 $authApi = $apiFactory->createAuthApi();
 $sessionId = $authApi->login($username, $password);

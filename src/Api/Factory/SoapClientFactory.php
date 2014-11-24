@@ -1,6 +1,6 @@
 <?php
 
-namespace Webit\GlsAde\Api;
+namespace Webit\GlsAde\Api\Factory;
 
 class SoapClientFactory
 {

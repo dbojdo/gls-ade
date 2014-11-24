@@ -4,7 +4,18 @@
  * Created at: 2014-11-21 22:04
  */
  
-namespace Webit\GlsAde\Api;
+namespace Webit\GlsAde\Api\Factory;
+
+use JMS\Serializer\SerializerInterface;
+use Webit\GlsAde\Api\AuthApi;
+use Webit\GlsAde\Api\ConsignmentPrepareApi;
+use Webit\GlsAde\Api\MpkApi;
+use Webit\GlsAde\Api\PickupApi;
+use Webit\GlsAde\Api\PostCodeApi;
+use Webit\GlsAde\Api\ProfileApi;
+use Webit\GlsAde\Api\ResultMap\ResultTypeMapInterface;
+use Webit\GlsAde\Api\SenderAddressApi;
+use Webit\GlsAde\Api\ServiceApi;
 
 /**
  * Class ApiFactory
@@ -21,13 +32,25 @@ class ApiFactory
     private $soapClientFactory;
 
     /**
+     * @var SerializerInterface
+     */
+    private $serializer;
+
+    /**
+     * @var ResultTypeMapInterface
+     */
+    private $resultTypeMap;
+
+    /**
      * @var \SoapClient
      */
     private $soapClient;
 
-    public function __construct(SoapClientFactory $soapClientFactory)
+    public function __construct(SoapClientFactory $soapClientFactory, SerializerInterface $serializer, ResultTypeMapInterface $resultTypeMap)
     {
         $this->soapClientFactory = $soapClientFactory;
+        $this->serializer = $serializer;
+        $this->resultTypeMap = $resultTypeMap;
     }
 
     /**
@@ -36,7 +59,9 @@ class ApiFactory
     public function createAuthApi()
     {
         return new AuthApi(
-            $this->getSoapClient()
+            $this->getSoapClient(),
+            $this->serializer,
+            $this->resultTypeMap
         );
     }
 
@@ -50,6 +75,8 @@ class ApiFactory
     {
         return new MpkApi(
             $this->getSoapClient(),
+            $this->serializer,
+            $this->resultTypeMap,
             $authApi,
             $username,
             $password
@@ -66,6 +93,8 @@ class ApiFactory
     {
         return new ConsignmentPrepareApi(
             $this->getSoapClient(),
+            $this->serializer,
+            $this->resultTypeMap,
             $authApi,
             $username,
             $password
@@ -82,6 +111,8 @@ class ApiFactory
     {
         return new ProfileApi(
             $this->getSoapClient(),
+            $this->serializer,
+            $this->resultTypeMap,
             $authApi,
             $username,
             $password
@@ -98,6 +129,8 @@ class ApiFactory
     {
         return new ServiceApi(
             $this->getSoapClient(),
+            $this->serializer,
+            $this->resultTypeMap,
             $authApi,
             $username,
             $password
@@ -114,6 +147,8 @@ class ApiFactory
     {
         return new SenderAddressApi(
             $this->getSoapClient(),
+            $this->serializer,
+            $this->resultTypeMap,
             $authApi,
             $username,
             $password
@@ -130,6 +165,8 @@ class ApiFactory
     {
         return new PickupApi(
             $this->getSoapClient(),
+            $this->serializer,
+            $this->resultTypeMap,
             $authApi,
             $username,
             $password
@@ -146,6 +183,8 @@ class ApiFactory
     {
         return new PostCodeApi(
             $this->getSoapClient(),
+            $this->serializer,
+            $this->resultTypeMap,
             $authApi,
             $username,
             $password
@@ -158,9 +197,7 @@ class ApiFactory
     private function getSoapClient()
     {
         if ($this->soapClient == null) {
-            $this->soapClient = $this->soapClientFactory->createSoapClient(self::GLS_ADE_WSDL, array(
-                'features' => SOAP_SINGLE_ELEMENT_ARRAYS
-            ));
+            $this->soapClient = $this->soapClientFactory->createSoapClient(self::GLS_ADE_WSDL, array());
         }
 
         return $this->soapClient;
