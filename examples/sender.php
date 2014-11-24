@@ -2,8 +2,8 @@
 /** @var \Webit\GlsAde\Api\Factory\ApiFactory $apiFactory */
 $apiFactory = require 'bootstrap.php';
 
-$username = '30000002'; //'my-test-username';,
-$password = 'offlinia02'; //'my-test-password';
+$username = 'my-test-username';
+$password = 'my-test-password';
 
 $authApi = $apiFactory->createAuthApi();
 $senderApi = $apiFactory->createSenderAddressApi($authApi, $username, $password);
