@@ -4,7 +4,7 @@
  * Created at: 2014-11-21 20:28
  */
  
-namespace Webit\GlsAde\Model;
+namespace Webit\GlsAde\Api\Exception;
 
 /**
  * Class Error

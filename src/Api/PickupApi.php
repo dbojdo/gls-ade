@@ -74,7 +74,7 @@ class PickupApi extends AbstractSessionAwareApi
      */
     public function getPickup($id)
     {
-        $response = $this->request('adePickup_Get', array('id' => $id));
+        $response = $this->request('adePickup_Get', array('id' => $id), 'Webit\GlsAde\Model\Pickup');
 
         return $response;
     }
@@ -88,7 +88,7 @@ class PickupApi extends AbstractSessionAwareApi
      */
     public function getConsignment($id)
     {
-        $response = $this->request('adePickup_GetConsign', array('id' => $id));
+        $response = $this->request('adePickup_GetConsign', array('id' => $id), 'Webit\GlsAde\Model\Consignment');
 
         return $response;
     }
@@ -172,7 +172,11 @@ class PickupApi extends AbstractSessionAwareApi
      */
     public function searchParcel($number)
     {
-        $response = $this->request('adePickup_ParcelNumberSearch', array('number' => $number));
+        $response = $this->request(
+            'adePickup_ParcelNumberSearch',
+            array('number' => $number),
+            'Webit\GlsAde\Model\Consignment'
+        );
 
         return $response;
     }

@@ -4,7 +4,7 @@
  * Created at: 2014-11-24 07:04
  */
  
-namespace Webit\GlsAde\Model;
+namespace Webit\GlsAde\Api\Exception;
 
 /**
  * Class InvalidInputDataException

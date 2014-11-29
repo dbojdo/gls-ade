@@ -2,11 +2,10 @@
 /** @var \Webit\GlsAde\Api\Factory\ApiFactory $apiFactory */
 $apiFactory = require 'bootstrap.php';
 
-$username = 'my-test-username';
-$password = 'my-test-password';
+/** @var array $config */
 
 $authApi = $apiFactory->createAuthApi();
-$senderApi = $apiFactory->createMpkApi($authApi, $username, $password);
+$senderApi = $apiFactory->createMpkApi($authApi, $config['username'], $config['password']);
 $status = $senderApi->getMpkStatus();
 
 printf("Status of MPK: %d\n", $status);

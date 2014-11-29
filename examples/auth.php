@@ -2,11 +2,8 @@
 /** @var \Webit\GlsAde\Api\Factory\ApiFactory $apiFactory */
 $apiFactory = require 'bootstrap.php';
 
-$username = 'my-test-username';
-$password = 'my-test-password';
-
 $authApi = $apiFactory->createAuthApi();
-$sessionId = $authApi->login($username, $password);
+$sessionId = $authApi->login($config['username'], $config['password']);
 
 printf("Session with ID \"%s\" has been created\n", $sessionId);
 

@@ -2,11 +2,10 @@
 /** @var \Webit\GlsAde\Api\Factory\ApiFactory $apiFactory */
 $apiFactory = require 'bootstrap.php';
 
-$username = 'my-test-username';
-$password = 'my-test-password';
+/** @var array $config */
 
 $authApi = $apiFactory->createAuthApi();
-$servicesApi = $apiFactory->createServiceApi($authApi, $username, $password);
+$servicesApi = $apiFactory->createServiceApi($authApi, $config['username'], $config['password']);
 $maxCodAmount = $servicesApi->getMaxCodAmount();
 printf("Max COD amount is \"%s\"\n", $maxCodAmount);
 

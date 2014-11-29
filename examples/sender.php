@@ -2,11 +2,10 @@
 /** @var \Webit\GlsAde\Api\Factory\ApiFactory $apiFactory */
 $apiFactory = require 'bootstrap.php';
 
-$username = 'my-test-username';
-$password = 'my-test-password';
+/** @var array $config */
 
 $authApi = $apiFactory->createAuthApi();
-$senderApi = $apiFactory->createSenderAddressApi($authApi, $username, $password);
+$senderApi = $apiFactory->createSenderAddressApi($authApi, $config['username'], $config['password']);
 $status = $senderApi->getSenderAddressStatus();
 
 printf("Status of sender address: %d\n", $status);

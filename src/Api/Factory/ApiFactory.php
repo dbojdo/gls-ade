@@ -6,16 +6,19 @@
  
 namespace Webit\GlsAde\Api\Factory;
 
-use JMS\Serializer\SerializerInterface;
 use Webit\GlsAde\Api\AuthApi;
 use Webit\GlsAde\Api\ConsignmentPrepareApi;
 use Webit\GlsAde\Api\MpkApi;
 use Webit\GlsAde\Api\PickupApi;
 use Webit\GlsAde\Api\PostCodeApi;
 use Webit\GlsAde\Api\ProfileApi;
-use Webit\GlsAde\Api\ResultMap\ResultTypeMapInterface;
 use Webit\GlsAde\Api\SenderAddressApi;
 use Webit\GlsAde\Api\ServiceApi;
+use Webit\SoapApi\Exception\ExceptionFactoryInterface;
+use Webit\SoapApi\Hydrator\HydratorInterface;
+use Webit\SoapApi\Input\InputNormalizerInterface;
+use Webit\SoapApi\SoapApiExecutor;
+use Webit\SoapApi\SoapClient\SoapClientFactoryInterface;
 
 /**
  * Class ApiFactory
@@ -24,33 +27,70 @@ use Webit\GlsAde\Api\ServiceApi;
 class ApiFactory
 {
 
-    const GLS_ADE_WSDL = 'https://ade-test.gls-poland.com/adeplus/pm1/ade_webapi.php?wsdl';
-
+    const GLS_ADE_WSDL_TEST = 'https://ade-test.gls-poland.com/adeplus/pm1/ade_webapi.php?wsdl';
+    const GLS_ADE_WSDL = 'https://adeplus.gls-poland.com/adeplus/pm1/ade_webapi.php?wsdl';
     /**
-     * @var SoapClientFactory
+     * @var SoapClientFactoryInterface
      */
     private $soapClientFactory;
 
     /**
-     * @var SerializerInterface
+     * @var InputNormalizerInterface
      */
-    private $serializer;
+    private $normalizer;
 
     /**
-     * @var ResultTypeMapInterface
+     * @var HydratorInterface
      */
-    private $resultTypeMap;
+    private $hydrator;
+
+    /**
+     * @var ExceptionFactoryInterface
+     */
+    private $exceptionFactory;
+
+    /**
+     * @var bool
+     */
+    private $testEnvironment = false;
 
     /**
      * @var \SoapClient
      */
-    private $soapClient;
+    private $executor;
 
-    public function __construct(SoapClientFactory $soapClientFactory, SerializerInterface $serializer, ResultTypeMapInterface $resultTypeMap)
-    {
+    public function __construct(
+        SoapClientFactoryInterface $soapClientFactory,
+        InputNormalizerInterface $normalizer,
+        HydratorInterface $hydrator,
+        ExceptionFactoryInterface $exceptionFactory,
+        $testEnvironment = false
+    ) {
         $this->soapClientFactory = $soapClientFactory;
-        $this->serializer = $serializer;
-        $this->resultTypeMap = $resultTypeMap;
+        $this->normalizer = $normalizer;
+        $this->hydrator = $hydrator;
+        $this->exceptionFactory;
+        $this->testEnvironment = $testEnvironment;
+    }
+
+    /**
+     * @return \SoapClient|SoapApiExecutor
+     */
+    private function getExecutor()
+    {
+        if ($this->executor == null) {
+            $this->executor = new SoapApiExecutor(
+                $this->soapClientFactory->createSoapClient(
+                    $this->testEnvironment ? self::GLS_ADE_WSDL_TEST : self::GLS_ADE_WSDL
+                ),
+                $this->normalizer,
+                $this->hydrator,
+                null,
+                $this->exceptionFactory
+            );
+        }
+
+        return $this->executor;
     }
 
     /**
@@ -59,9 +99,7 @@ class ApiFactory
     public function createAuthApi()
     {
         return new AuthApi(
-            $this->getSoapClient(),
-            $this->serializer,
-            $this->resultTypeMap
+            $this->getExecutor()
         );
     }
 
@@ -74,9 +112,7 @@ class ApiFactory
     public function createMpkApi(AuthApi $authApi, $username, $password)
     {
         return new MpkApi(
-            $this->getSoapClient(),
-            $this->serializer,
-            $this->resultTypeMap,
+            $this->getExecutor(),
             $authApi,
             $username,
             $password
@@ -92,9 +128,7 @@ class ApiFactory
     public function createConsignmentPrepareApi(AuthApi $authApi, $username, $password)
     {
         return new ConsignmentPrepareApi(
-            $this->getSoapClient(),
-            $this->serializer,
-            $this->resultTypeMap,
+            $this->getExecutor(),
             $authApi,
             $username,
             $password
@@ -110,9 +144,7 @@ class ApiFactory
     public function createProfileApi(AuthApi $authApi, $username, $password)
     {
         return new ProfileApi(
-            $this->getSoapClient(),
-            $this->serializer,
-            $this->resultTypeMap,
+            $this->getExecutor(),
             $authApi,
             $username,
             $password
@@ -128,9 +160,7 @@ class ApiFactory
     public function createServiceApi(AuthApi $authApi, $username, $password)
     {
         return new ServiceApi(
-            $this->getSoapClient(),
-            $this->serializer,
-            $this->resultTypeMap,
+            $this->getExecutor(),
             $authApi,
             $username,
             $password
@@ -146,9 +176,7 @@ class ApiFactory
     public function createSenderAddressApi(AuthApi $authApi, $username, $password)
     {
         return new SenderAddressApi(
-            $this->getSoapClient(),
-            $this->serializer,
-            $this->resultTypeMap,
+            $this->getExecutor(),
             $authApi,
             $username,
             $password
@@ -164,9 +192,7 @@ class ApiFactory
     public function createPickupApi(AuthApi $authApi, $username, $password)
     {
         return new PickupApi(
-            $this->getSoapClient(),
-            $this->serializer,
-            $this->resultTypeMap,
+            $this->getExecutor(),
             $authApi,
             $username,
             $password
@@ -182,24 +208,10 @@ class ApiFactory
     public function createPostCodeApi(AuthApi $authApi, $username, $password)
     {
         return new PostCodeApi(
-            $this->getSoapClient(),
-            $this->serializer,
-            $this->resultTypeMap,
+            $this->getExecutor(),
             $authApi,
             $username,
             $password
         );
-    }
-
-    /**
-     * @return \SoapClient
-     */
-    private function getSoapClient()
-    {
-        if ($this->soapClient == null) {
-            $this->soapClient = $this->soapClientFactory->createSoapClient(self::GLS_ADE_WSDL, array());
-        }
-
-        return $this->soapClient;
     }
 }

@@ -8,6 +8,7 @@ namespace Webit\GlsAde\Api;
 
 use JMS\Serializer\SerializerInterface;
 use Webit\GlsAde\Api\ResultMap\ResultTypeMapInterface;
+use Webit\SoapApi\SoapApiExecutorInterface;
 
 /**
  * Class AbstractSessionAwareApi
@@ -36,22 +37,18 @@ abstract class AbstractSessionAwareApi extends AbstractApi implements SessionAwa
     private $sessionId;
 
     /**
-     * @param \SoapClient $client
-     * @param SerializerInterface $serializer
-     * @param ResultTypeMapInterface $resultTypeMap
-     * @param $authApi
+     * @param SoapApiExecutorInterface $executor
+     * @param AuthApi $authApi
      * @param $username
      * @param $password
      */
     public function __construct(
-        \SoapClient $client,
-        SerializerInterface $serializer,
-        ResultTypeMapInterface $resultTypeMap,
-        $authApi,
+        SoapApiExecutorInterface $executor,
+        AuthApi $authApi,
         $username,
         $password
     ) {
-        parent::__construct($client, $serializer, $resultTypeMap);
+        parent::__construct($executor);
 
         $this->authApi = $authApi;
         $this->username = $username;
@@ -81,20 +78,21 @@ abstract class AbstractSessionAwareApi extends AbstractApi implements SessionAwa
 
     /**
      * @param string $soapFunction
-     * @param array $arguments
+     * @param mixed $arguments
+     * @param string $resultType
      * @return mixed
      */
-    protected function request($soapFunction, $arguments = array())
+    protected function request($soapFunction, $arguments = null, $resultType = 'ArrayCollection')
     {
-        $arguments = array_replace(array('session' => $this->getSessionId()), $arguments);
+        $arguments = array_replace(array('session' => $this->getSessionId()), (array) $arguments);
 
         try {
-            return parent::request($soapFunction, $arguments);
+            return parent::request($soapFunction, $arguments, $resultType);
         } catch (\Exception $e) {
             // err_sess_expired || //err_sess_not_found
 
             $arguments['session'] = $this->renewSessionId();
-            return parent::request($soapFunction, $arguments);
+            return parent::request($soapFunction, $arguments, $resultType);
         }
     }
 }

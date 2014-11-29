@@ -27,7 +27,7 @@ class ServiceApi extends AbstractSessionAwareApi
     public function getAllowedServices()
     {
         /** @var ServiceList $response */
-        $response = $this->request('adeServices_GetAllowed');
+        $response = $this->request('adeServices_GetAllowed', null, 'Webit\GlsAde\Model\ServiceList');
 
         return $response;
     }
@@ -56,7 +56,7 @@ class ServiceApi extends AbstractSessionAwareApi
     public function getMaxParcelsWeight()
     {
         /** @var MaxParcelWeight $response */
-        $response = $this->request('adeServices_GetMaxParcelWeights');
+        $response = $this->request('adeServices_GetMaxParcelWeights', null, 'Webit\GlsAde\Model\MaxParcelWeight');
 
         return $response;
     }
@@ -77,7 +77,11 @@ class ServiceApi extends AbstractSessionAwareApi
     public function getGuaranteedServices($zipCode)
     {
         /** @var ServiceList $response */
-        $response = $this->request('adeServices_GetGuaranteed', array('zipcode' => $zipCode));
+        $response = $this->request(
+            'adeServices_GetGuaranteed',
+            array('zipcode' => $zipCode),
+            'Webit\GlsAde\Model\ServiceList'
+        );
 
         return $response;
     }

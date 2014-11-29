@@ -2,11 +2,10 @@
 /** @var \Webit\GlsAde\Api\Factory\ApiFactory $apiFactory */
 $apiFactory = require 'bootstrap.php';
 
-$username = 'my-test-username';
-$password = 'my-test-password';
+/** @var array $config */
 
 $authApi = $apiFactory->createAuthApi();
-$profileApi = $apiFactory->createProfileApi($authApi, $username, $password);
+$profileApi = $apiFactory->createProfileApi($authApi, $config['username'], $config['password']);
 $profiles = $profileApi->getProfiles();
 
 echo "Profiles:\n";

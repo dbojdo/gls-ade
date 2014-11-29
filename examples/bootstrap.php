@@ -4,9 +4,17 @@ require __DIR__.'/../vendor/autoload.php';
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use JMS\Serializer\SerializerBuilder;
 use Webit\GlsAde\Api\Factory\ApiFactory;
-use Webit\GlsAde\Api\Factory\SoapClientFactory;
-use Webit\GlsAde\Api\ResultMap\ResultTypeMap;
-use Webit\GlsAde\Api\ResultMap\ResultMapLoader;
+use Webit\SoapApi\Input\InputNormalizerSerializedBased;
+use Webit\SoapApi\Hydrator\HydratorSerializer;
+use Webit\SoapApi\Util\BinaryStringHelper;
+use Webit\SoapApi\SoapClient\SoapClientFactory;
+use Webit\GlsAde\Api\Exception\ExceptionFactory;
+
+if (is_file(__DIR__ .'/config.php') == false) {
+    throw new \LogicException('Missing required file "examples/config.php". Create it base on "examples/config.php.dist".');
+}
+
+$config = require __DIR__ .'/config.php';
 
 AnnotationRegistry::registerAutoloadNamespace(
     'JMS\Serializer\Annotation',
@@ -15,11 +23,10 @@ AnnotationRegistry::registerAutoloadNamespace(
 
 $serializer = SerializerBuilder::create()->build();
 $clientFactory = new SoapClientFactory();
+$normalizer = new InputNormalizerSerializedBased($serializer, array('input'));
+$hydrator = new HydratorSerializer($serializer, new BinaryStringHelper());
+$exceptionFactory = new ExceptionFactory();
 
-$resultMap = new ResultTypeMap();
-$mapLoader = new ResultMapLoader();
-$mapLoader->loadFromYaml($resultMap, new \SplFileInfo(__DIR__.'/../src/Resources/result-type-map.yml'));
-
-$apiFactory = new ApiFactory($clientFactory, $serializer, $resultMap);
+$apiFactory = new ApiFactory($clientFactory, $normalizer, $hydrator, $exceptionFactory, $config['test-env']);
 
 return $apiFactory;

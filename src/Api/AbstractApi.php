@@ -6,10 +6,10 @@
  
 namespace Webit\GlsAde\Api;
 
-use Doctrine\Common\Collections\ArrayCollection;
 use JMS\Serializer\SerializationContext;
 use JMS\Serializer\SerializerInterface;
 use Webit\GlsAde\Api\ResultMap\ResultTypeMapInterface;
+use Webit\SoapApi\SoapApiExecutorInterface;
 
 /**
  * Class AbstractApi
@@ -18,86 +18,27 @@ use Webit\GlsAde\Api\ResultMap\ResultTypeMapInterface;
 abstract class AbstractApi
 {
     /**
-     * @var \SoapClient
+     * @var SoapApiExecutorInterface
      */
-    private $client;
+    private $executor;
 
     /**
-     * @var SerializerInterface
+     * @param SoapApiExecutorInterface $executor
      */
-    private $serializer;
-
-    /**
-     * @var ResultTypeMapInterface
-     */
-    private $resultTypeMap;
-
-    /**
-     * @param \SoapClient $client
-     * @param SerializerInterface $serializer
-     * @param ResultTypeMapInterface $resultTypeMap
-     */
-    public function __construct(
-        \SoapClient $client,
-        SerializerInterface $serializer,
-        ResultTypeMapInterface $resultTypeMap
-    ) {
-        $this->client = $client;
-        $this->serializer = $serializer;
-        $this->resultTypeMap = $resultTypeMap;
+    public function __construct(SoapApiExecutorInterface $executor)
+    {
+        $this->executor = $executor;
     }
 
     /**
      * @param string $soapFunction
-     * @param array $arguments
+     * @param mixed $arguments
      * @throws \Exception
      * @throws \SoapFault
      * @return mixed
      */
-    protected function request($soapFunction, array $arguments = array())
+    protected function request($soapFunction, $arguments = null, $resultType = 'ArrayCollection')
     {
-        try {
-            $input = $this->normalizeInput($arguments);
-            $response = $this->client->__soapCall($soapFunction, $input);
-
-            return $this->deserializeOutput($soapFunction, json_encode($response));
-        } catch (\SoapFault $e) {
-            // TODO: create appropriate exception
-            throw $e;
-        }
-    }
-
-    /**
-     * @param array $arguments
-     * @return array
-     */
-    private function normalizeInput(array $arguments)
-    {
-        $json = $this->serializer->serialize(
-            $arguments,
-            'json',
-            SerializationContext::create()->setGroups(array('input'))
-        );
-
-        return $this->serializer->deserialize($json, 'array', 'json');
-    }
-
-    /**
-     * @param $soapFunction
-     * @param $json
-     * @return mixed
-     */
-    private function deserializeOutput($soapFunction, $json)
-    {
-        $outputType = $this->resultTypeMap->getResultType($soapFunction);
-
-        $result = $this->serializer->deserialize($json, $outputType, 'json');
-
-        // FIX for serializer
-        if (substr($outputType, 0, strlen('ArrayCollection')) == 'ArrayCollection' && is_array($result)) {
-            return new ArrayCollection($result);
-        }
-
-        return $result;
+        return $this->executor->executeSoapFunction($soapFunction, $arguments, $resultType);
     }
 }

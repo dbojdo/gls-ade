@@ -28,7 +28,7 @@ class ProfileApi extends AbstractSessionAwareApi
      */
     public function getProfiles()
     {
-        $profiles = $this->request('adeProfile_GetIDs');
+        $profiles = $this->request('adeProfile_GetIDs', null, 'ArrayCollection<Webit\GlsAde\Model\Profile>');
 
         return $profiles;
     }
@@ -42,7 +42,7 @@ class ProfileApi extends AbstractSessionAwareApi
      */
     public function changeProfile($profileId)
     {
-        $profile = $this->request('adeProfile_Change', array('id' => $profileId));
+        $profile = $this->request('adeProfile_Change', array('id' => $profileId), 'Webit\GlsAde\Model\Profile');
         // Profile - Tablica z informacjami na temat profilu, na który nastąpiła zmiana.
 
         return $profile;

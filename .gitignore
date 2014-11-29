@@ -3,3 +3,4 @@ vendor/
 composer.lock
 .idea
 phpspec.yml
+examples/config.php

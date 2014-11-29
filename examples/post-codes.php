@@ -2,11 +2,10 @@
 /** @var \Webit\GlsAde\Api\Factory\ApiFactory $apiFactory */
 $apiFactory = require 'bootstrap.php';
 
-$username = 'my-test-username';
-$password = 'my-test-password';
+/** @var array $config */
 
 $authApi = $apiFactory->createAuthApi();
-$postCodesApi = $apiFactory->createPostCodeApi($authApi, $username, $password);
+$postCodesApi = $apiFactory->createPostCodeApi($authApi, $config['username'], $config['password']);
 
 $country = 'PL';
 $postCode = '30-855';

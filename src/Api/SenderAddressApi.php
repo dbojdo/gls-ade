@@ -56,7 +56,11 @@ class SenderAddressApi extends AbstractSessionAwareApi
     public function getSenderAddressDictionary()
     {
         /** @var ArrayCollection $response */
-        $response = $this->request('adeSendAddr_GetDictionary');
+        $response = $this->request(
+            'adeSendAddr_GetDictionary',
+            null,
+            'ArrayCollection<Webit\GlsAde\Model\SenderAddress>'
+        );
 
         return $response;
     }
