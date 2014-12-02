@@ -2,7 +2,7 @@
 /** @var \Webit\GlsAde\Api\Factory\ApiFactory $apiFactory */
 $apiFactory = require 'bootstrap.php';
 
-$authApi = $apiFactory->createAuthApi();
+$authApi = $apiFactory->createAuthApi($config['test-env']);
 $sessionId = $authApi->login($config['username'], $config['password']);
 
 printf("Session with ID \"%s\" has been created\n", $sessionId);

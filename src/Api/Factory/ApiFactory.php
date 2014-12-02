@@ -18,6 +18,7 @@ use Webit\SoapApi\Exception\ExceptionFactoryInterface;
 use Webit\SoapApi\Hydrator\HydratorInterface;
 use Webit\SoapApi\Input\InputNormalizerInterface;
 use Webit\SoapApi\SoapApiExecutor;
+use Webit\SoapApi\SoapApiExecutorFactory;
 use Webit\SoapApi\SoapClient\SoapClientFactoryInterface;
 
 /**
@@ -35,6 +36,11 @@ class ApiFactory
     private $soapClientFactory;
 
     /**
+     * @var SoapApiExecutorFactory
+     */
+    private $executorFactory;
+
+    /**
      * @var InputNormalizerInterface
      */
     private $normalizer;
@@ -50,38 +56,35 @@ class ApiFactory
     private $exceptionFactory;
 
     /**
-     * @var bool
+     * @var array
      */
-    private $testEnvironment = false;
-
-    /**
-     * @var \SoapClient
-     */
-    private $executor;
+    private $executor = array();
 
     public function __construct(
         SoapClientFactoryInterface $soapClientFactory,
+        SoapApiExecutorFactory $executorFactory,
         InputNormalizerInterface $normalizer,
         HydratorInterface $hydrator,
-        ExceptionFactoryInterface $exceptionFactory,
-        $testEnvironment = false
+        ExceptionFactoryInterface $exceptionFactory
     ) {
         $this->soapClientFactory = $soapClientFactory;
+        $this->executorFactory = $executorFactory;
         $this->normalizer = $normalizer;
         $this->hydrator = $hydrator;
         $this->exceptionFactory;
-        $this->testEnvironment = $testEnvironment;
     }
 
     /**
+     * @param bool $testEnvironment
      * @return \SoapClient|SoapApiExecutor
      */
-    private function getExecutor()
+    private function getExecutor($testEnvironment = false)
     {
-        if ($this->executor == null) {
-            $this->executor = new SoapApiExecutor(
+        $key = $testEnvironment ? 'test' : 'prod';
+        if (isset($this->executor[$key]) == false) {
+            $this->executor[$key] = $this->executorFactory->createExecutor(
                 $this->soapClientFactory->createSoapClient(
-                    $this->testEnvironment ? self::GLS_ADE_WSDL_TEST : self::GLS_ADE_WSDL
+                    $testEnvironment ? self::GLS_ADE_WSDL_TEST : self::GLS_ADE_WSDL
                 ),
                 $this->normalizer,
                 $this->hydrator,
@@ -90,16 +93,17 @@ class ApiFactory
             );
         }
 
-        return $this->executor;
+        return $this->executor[$key];
     }
 
     /**
+     * @param bool $testEnvironment
      * @return AuthApi
      */
-    public function createAuthApi()
+    public function createAuthApi($testEnvironment = false)
     {
         return new AuthApi(
-            $this->getExecutor()
+            $this->getExecutor($testEnvironment)
         );
     }
 
@@ -107,12 +111,13 @@ class ApiFactory
      * @param AuthApi $authApi
      * @param string $username
      * @param string $password
+     * @param bool $testEnvironment
      * @return MpkApi
      */
-    public function createMpkApi(AuthApi $authApi, $username, $password)
+    public function createMpkApi(AuthApi $authApi, $username, $password, $testEnvironment = false)
     {
         return new MpkApi(
-            $this->getExecutor(),
+            $this->getExecutor($testEnvironment),
             $authApi,
             $username,
             $password
@@ -123,12 +128,13 @@ class ApiFactory
      * @param AuthApi $authApi
      * @param string $username
      * @param string $password
+     * @param bool $testEnvironment
      * @return ConsignmentPrepareApi
      */
-    public function createConsignmentPrepareApi(AuthApi $authApi, $username, $password)
+    public function createConsignmentPrepareApi(AuthApi $authApi, $username, $password, $testEnvironment = false)
     {
         return new ConsignmentPrepareApi(
-            $this->getExecutor(),
+            $this->getExecutor($testEnvironment),
             $authApi,
             $username,
             $password
@@ -139,12 +145,13 @@ class ApiFactory
      * @param AuthApi $authApi
      * @param string $username
      * @param string $password
+     * @param bool $testEnvironment
      * @return ProfileApi
      */
-    public function createProfileApi(AuthApi $authApi, $username, $password)
+    public function createProfileApi(AuthApi $authApi, $username, $password, $testEnvironment = false)
     {
         return new ProfileApi(
-            $this->getExecutor(),
+            $this->getExecutor($testEnvironment),
             $authApi,
             $username,
             $password
@@ -155,12 +162,13 @@ class ApiFactory
      * @param AuthApi $authApi
      * @param string $username
      * @param string $password
+     * @param bool $testEnvironment
      * @return ServiceApi
      */
-    public function createServiceApi(AuthApi $authApi, $username, $password)
+    public function createServiceApi(AuthApi $authApi, $username, $password, $testEnvironment = false)
     {
         return new ServiceApi(
-            $this->getExecutor(),
+            $this->getExecutor($testEnvironment),
             $authApi,
             $username,
             $password
@@ -171,12 +179,13 @@ class ApiFactory
      * @param AuthApi $authApi
      * @param string $username
      * @param string $password
+     * @param bool $testEnvironment
      * @return SenderAddressApi
      */
-    public function createSenderAddressApi(AuthApi $authApi, $username, $password)
+    public function createSenderAddressApi(AuthApi $authApi, $username, $password, $testEnvironment = false)
     {
         return new SenderAddressApi(
-            $this->getExecutor(),
+            $this->getExecutor($testEnvironment),
             $authApi,
             $username,
             $password
@@ -187,12 +196,13 @@ class ApiFactory
      * @param AuthApi $authApi
      * @param string $username
      * @param string $password
+     * @param bool $testEnvironment
      * @return PickupApi
      */
-    public function createPickupApi(AuthApi $authApi, $username, $password)
+    public function createPickupApi(AuthApi $authApi, $username, $password, $testEnvironment = false)
     {
         return new PickupApi(
-            $this->getExecutor(),
+            $this->getExecutor($testEnvironment),
             $authApi,
             $username,
             $password
@@ -203,12 +213,13 @@ class ApiFactory
      * @param AuthApi $authApi
      * @param string $username
      * @param string $password
+     * @param bool $testEnvironment
      * @return PostCodeApi
      */
-    public function createPostCodeApi(AuthApi $authApi, $username, $password)
+    public function createPostCodeApi(AuthApi $authApi, $username, $password, $testEnvironment = false)
     {
         return new PostCodeApi(
-            $this->getExecutor(),
+            $this->getExecutor($testEnvironment),
             $authApi,
             $username,
             $password

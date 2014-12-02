@@ -4,8 +4,8 @@ $apiFactory = require 'bootstrap.php';
 
 /** @var array $config */
 
-$authApi = $apiFactory->createAuthApi();
-$senderApi = $apiFactory->createSenderAddressApi($authApi, $config['username'], $config['password']);
+$authApi = $apiFactory->createAuthApi($config['test-env']);
+$senderApi = $apiFactory->createSenderAddressApi($authApi, $config['username'], $config['password'], $config['test-env']);
 $status = $senderApi->getSenderAddressStatus();
 
 printf("Status of sender address: %d\n", $status);

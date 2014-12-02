@@ -4,11 +4,12 @@ require __DIR__.'/../vendor/autoload.php';
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use JMS\Serializer\SerializerBuilder;
 use Webit\GlsAde\Api\Factory\ApiFactory;
-use Webit\SoapApi\Input\InputNormalizerSerializedBased;
-use Webit\SoapApi\Hydrator\HydratorSerializer;
+use Webit\SoapApi\Input\InputNormalizerSerializerBased;
+use Webit\SoapApi\Hydrator\HydratorSerializerBased;
 use Webit\SoapApi\Util\BinaryStringHelper;
 use Webit\SoapApi\SoapClient\SoapClientFactory;
 use Webit\GlsAde\Api\Exception\ExceptionFactory;
+use Webit\SoapApi\SoapApiExecutorFactory;
 
 if (is_file(__DIR__ .'/config.php') == false) {
     throw new \LogicException('Missing required file "examples/config.php". Create it base on "examples/config.php.dist".');
@@ -23,10 +24,11 @@ AnnotationRegistry::registerAutoloadNamespace(
 
 $serializer = SerializerBuilder::create()->build();
 $clientFactory = new SoapClientFactory();
-$normalizer = new InputNormalizerSerializedBased($serializer, array('input'));
-$hydrator = new HydratorSerializer($serializer, new BinaryStringHelper());
+$executorFactory = new SoapApiExecutorFactory();
+$normalizer = new InputNormalizerSerializerBased($serializer, array('input'));
+$hydrator = new HydratorSerializerBased($serializer, new BinaryStringHelper());
 $exceptionFactory = new ExceptionFactory();
 
-$apiFactory = new ApiFactory($clientFactory, $normalizer, $hydrator, $exceptionFactory, $config['test-env']);
+$apiFactory = new ApiFactory($clientFactory, $executorFactory, $normalizer, $hydrator, $exceptionFactory);
 
 return $apiFactory;
