@@ -3,7 +3,7 @@
 $apiFactory = require 'bootstrap.php';
 
 $authApi = $apiFactory->createAuthApi($config['test-env']);
-$sessionId = $authApi->login($config['username'], $config['password']);
+$sessionId = $authApi->login($account);
 
 printf("Session with ID \"%s\" has been created\n", $sessionId);
 

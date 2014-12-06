@@ -14,6 +14,7 @@ use Webit\GlsAde\Api\PostCodeApi;
 use Webit\GlsAde\Api\ProfileApi;
 use Webit\GlsAde\Api\SenderAddressApi;
 use Webit\GlsAde\Api\ServiceApi;
+use Webit\GlsAde\Model\AdeAccount;
 use Webit\SoapApi\Exception\ExceptionFactoryInterface;
 use Webit\SoapApi\Hydrator\HydratorInterface;
 use Webit\SoapApi\Input\InputNormalizerInterface;
@@ -109,120 +110,106 @@ class ApiFactory
 
     /**
      * @param AuthApi $authApi
-     * @param string $username
-     * @param string $password
+     * @param AdeAccount $account
      * @param bool $testEnvironment
      * @return MpkApi
      */
-    public function createMpkApi(AuthApi $authApi, $username, $password, $testEnvironment = false)
+    public function createMpkApi(AuthApi $authApi, AdeAccount $account, $testEnvironment = false)
     {
         return new MpkApi(
             $this->getExecutor($testEnvironment),
             $authApi,
-            $username,
-            $password
+            $account
         );
     }
 
     /**
      * @param AuthApi $authApi
-     * @param string $username
-     * @param string $password
+     * @param AdeAccount $account
      * @param bool $testEnvironment
      * @return ConsignmentPrepareApi
      */
-    public function createConsignmentPrepareApi(AuthApi $authApi, $username, $password, $testEnvironment = false)
+    public function createConsignmentPrepareApi(AuthApi $authApi, AdeAccount $account, $testEnvironment = false)
     {
         return new ConsignmentPrepareApi(
             $this->getExecutor($testEnvironment),
             $authApi,
-            $username,
-            $password
+            $account
         );
     }
 
     /**
      * @param AuthApi $authApi
-     * @param string $username
-     * @param string $password
+     * @param AdeAccount $account
      * @param bool $testEnvironment
      * @return ProfileApi
      */
-    public function createProfileApi(AuthApi $authApi, $username, $password, $testEnvironment = false)
+    public function createProfileApi(AuthApi $authApi, AdeAccount $account, $testEnvironment = false)
     {
         return new ProfileApi(
             $this->getExecutor($testEnvironment),
             $authApi,
-            $username,
-            $password
+            $account
         );
     }
 
     /**
      * @param AuthApi $authApi
-     * @param string $username
-     * @param string $password
+     * @param AdeAccount $account
      * @param bool $testEnvironment
      * @return ServiceApi
      */
-    public function createServiceApi(AuthApi $authApi, $username, $password, $testEnvironment = false)
+    public function createServiceApi(AuthApi $authApi, AdeAccount $account, $testEnvironment = false)
     {
         return new ServiceApi(
             $this->getExecutor($testEnvironment),
             $authApi,
-            $username,
-            $password
+            $account
         );
     }
 
     /**
      * @param AuthApi $authApi
-     * @param string $username
-     * @param string $password
+     * @param AdeAccount $account
      * @param bool $testEnvironment
      * @return SenderAddressApi
      */
-    public function createSenderAddressApi(AuthApi $authApi, $username, $password, $testEnvironment = false)
+    public function createSenderAddressApi(AuthApi $authApi, AdeAccount $account, $testEnvironment = false)
     {
         return new SenderAddressApi(
             $this->getExecutor($testEnvironment),
             $authApi,
-            $username,
-            $password
+            $account
         );
     }
 
     /**
      * @param AuthApi $authApi
-     * @param string $username
-     * @param string $password
-     * @param bool $testEnvironment
-     * @return PickupApi
-     */
-    public function createPickupApi(AuthApi $authApi, $username, $password, $testEnvironment = false)
-    {
-        return new PickupApi(
-            $this->getExecutor($testEnvironment),
-            $authApi,
-            $username,
-            $password
-        );
-    }
-
-    /**
-     * @param AuthApi $authApi
-     * @param string $username
-     * @param string $password
+     * @param AdeAccount $account
      * @param bool $testEnvironment
      * @return PostCodeApi
      */
-    public function createPostCodeApi(AuthApi $authApi, $username, $password, $testEnvironment = false)
+    public function createPostCodeApi(AuthApi $authApi, AdeAccount $account, $testEnvironment = false)
     {
         return new PostCodeApi(
             $this->getExecutor($testEnvironment),
             $authApi,
-            $username,
-            $password
+            $account
+        );
+    }
+
+    /**
+     * @param AuthApi $authApi
+     * @param AdeAccount $account
+     * @param bool $testEnvironment
+     * @return PickupApi
+     */
+    public function createPickupApi(AuthApi $authApi, AdeAccount $account, $testEnvironment = false)
+    {
+        return new PickupApi(
+            $this->getExecutor($testEnvironment),
+            $authApi,
+            $account
         );
     }
 }

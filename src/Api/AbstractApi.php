@@ -33,8 +33,7 @@ abstract class AbstractApi
     /**
      * @param string $soapFunction
      * @param mixed $arguments
-     * @throws \Exception
-     * @throws \SoapFault
+     * @param string $resultType
      * @return mixed
      */
     protected function request($soapFunction, $arguments = null, $resultType = 'ArrayCollection')

@@ -6,8 +6,7 @@
  
 namespace Webit\GlsAde\Api;
 
-use JMS\Serializer\SerializerInterface;
-use Webit\GlsAde\Api\ResultMap\ResultTypeMapInterface;
+use Webit\GlsAde\Model\AdeAccount;
 use Webit\SoapApi\SoapApiExecutorInterface;
 
 /**
@@ -24,12 +23,7 @@ abstract class AbstractSessionAwareApi extends AbstractApi implements SessionAwa
     /**
      * @var string
      */
-    private $username;
-
-    /**
-     * @var string
-     */
-    private $password;
+    private $account;
 
     /**
      * @var string
@@ -39,20 +33,17 @@ abstract class AbstractSessionAwareApi extends AbstractApi implements SessionAwa
     /**
      * @param SoapApiExecutorInterface $executor
      * @param AuthApi $authApi
-     * @param $username
-     * @param $password
+     * @param AdeAccount $account
      */
     public function __construct(
         SoapApiExecutorInterface $executor,
         AuthApi $authApi,
-        $username,
-        $password
+        AdeAccount $account
     ) {
         parent::__construct($executor);
 
         $this->authApi = $authApi;
-        $this->username = $username;
-        $this->password = $password;
+        $this->account = $account;
     }
 
     /**
@@ -61,7 +52,7 @@ abstract class AbstractSessionAwareApi extends AbstractApi implements SessionAwa
     public function getSessionId()
     {
         if (! $this->sessionId) {
-            $this->sessionId = $this->authApi->login($this->username, $this->password);
+            $this->sessionId = $this->authApi->login($this->account->getUsername(), $this->account->getPassword());
         }
 
         return $this->sessionId;

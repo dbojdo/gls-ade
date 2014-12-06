@@ -3,6 +3,7 @@
 namespace Webit\GlsAde\Api;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Webit\GlsAde\Model\AdeAccount;
 
 class AuthApi extends AbstractApi
 {
@@ -13,14 +14,15 @@ class AuthApi extends AbstractApi
      * którym należy się posługiwać przy wywoływaniu innych metod systemu.
      * @see https://ade-test.gls-poland.com/adeplus/pm1/html/webapi/functions/f_login.htm
      *
-     * @param string $userName
-     * @param string $password
+     * @param AdeAccount $account
      * @return string Session ID
      */
-    public function login($userName, $password)
+    public function login(AdeAccount $account)
     {
         /** @var ArrayCollection $result */
-        $result = $this->request('adeLogin', array('user_name' => $userName, 'password' => $password));
+        $result = $this->request(
+            'adeLogin', array('user_name' => $account->getUsername(), 'password' => $account->getPassword())
+        );
 
         return $result->get('session');
     }
