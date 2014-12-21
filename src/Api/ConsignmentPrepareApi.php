@@ -67,7 +67,9 @@ class ConsignmentPrepareApi extends AbstractSessionAwareApi
      */
     public function getConsignment($id)
     {
+        /** @var Consignment $response */
         $response = $this->request('adePreparingBox_GetConsign', array('id' => $id), 'Webit\GlsAde\Model\Consignment');
+        $response->setDispatched(false);
 
         return $response;
     }

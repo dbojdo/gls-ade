@@ -301,6 +301,12 @@ class Consignment {
     private $parcels;
 
     /**
+     * Flag, if consignment has been fetched from "Prepare" or "Pickup"
+     * @var bool
+     */
+    private $dispatched = false;
+
+    /**
      * @return int
      */
     public function getId()
@@ -658,6 +664,17 @@ class Consignment {
         $this->zipCode = $zipCode;
     }
 
+    /**
+     * @return bool
+     */
+    public function isDispatched()
+    {
+        return $this->dispatched;
+    }
 
+    public function setDispatched($dispatched)
+    {
+        $this->dispatched = (bool) $dispatched;
+    }
 }
  
