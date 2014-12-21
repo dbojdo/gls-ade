@@ -547,7 +547,7 @@ class Consignment {
     /**
      * @param SenderAddress $senderAddress
      */
-    public function setSenderAddress(SenderAddress $senderAddress)
+    public function setSenderAddress(SenderAddress $senderAddress = null)
     {
         $this->senderAddress = $senderAddress;
     }
@@ -563,7 +563,7 @@ class Consignment {
     /**
      * @param ServiceDaw $serviceDaw
      */
-    public function setServiceDaw(ServiceDaw $serviceDaw)
+    public function setServiceDaw(ServiceDaw $serviceDaw = null)
     {
         $this->serviceDaw = $serviceDaw;
     }
@@ -579,7 +579,7 @@ class Consignment {
     /**
      * @param ServiceIdent $serviceIdent
      */
-    public function setServiceIdent(ServiceIdent $serviceIdent)
+    public function setServiceIdent(ServiceIdent $serviceIdent = null)
     {
         $this->serviceIdent = $serviceIdent;
     }
@@ -595,7 +595,7 @@ class Consignment {
     /**
      * @param ServicePpe $servicePpe
      */
-    public function setServicePpe(ServicePpe $servicePpe)
+    public function setServicePpe(ServicePpe $servicePpe = null)
     {
         $this->servicePpe = $servicePpe;
     }
