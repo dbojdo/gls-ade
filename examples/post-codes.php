@@ -5,7 +5,7 @@ $apiFactory = require 'bootstrap.php';
 /** @var array $config */
 
 $authApi = $apiFactory->createAuthApi($config['test-env']);
-$postCodesApi = $apiFactory->createPostCodeApi($authApi, $account, $config['test-env']);
+$postCodesApi = $apiFactory->createPostCodeApi($authApi, $account);
 
 $country = 'PL';
 $postCode = '30-855';

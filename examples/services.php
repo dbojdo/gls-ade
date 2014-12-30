@@ -5,7 +5,7 @@ $apiFactory = require 'bootstrap.php';
 /** @var array $config */
 
 $authApi = $apiFactory->createAuthApi($config['test-env']);
-$servicesApi = $apiFactory->createServiceApi($authApi, $account, $config['test-env']);
+$servicesApi = $apiFactory->createServiceApi($authApi, $account);
 $maxCodAmount = $servicesApi->getMaxCodAmount();
 printf("Max COD amount is \"%s\"\n", $maxCodAmount);
 
