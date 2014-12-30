@@ -111,13 +111,12 @@ class ApiFactory
     /**
      * @param AuthApi $authApi
      * @param AdeAccount $account
-     * @param bool $testEnvironment
      * @return MpkApi
      */
-    public function createMpkApi(AuthApi $authApi, AdeAccount $account, $testEnvironment = false)
+    public function createMpkApi(AuthApi $authApi, AdeAccount $account)
     {
         return new MpkApi(
-            $this->getExecutor($testEnvironment),
+            $this->getExecutor($account->isTestMode()),
             $authApi,
             $account
         );
@@ -126,13 +125,12 @@ class ApiFactory
     /**
      * @param AuthApi $authApi
      * @param AdeAccount $account
-     * @param bool $testEnvironment
      * @return ConsignmentPrepareApi
      */
-    public function createConsignmentPrepareApi(AuthApi $authApi, AdeAccount $account, $testEnvironment = false)
+    public function createConsignmentPrepareApi(AuthApi $authApi, AdeAccount $account)
     {
         return new ConsignmentPrepareApi(
-            $this->getExecutor($testEnvironment),
+            $this->getExecutor($account->isTestMode()),
             $authApi,
             $account
         );
@@ -141,13 +139,12 @@ class ApiFactory
     /**
      * @param AuthApi $authApi
      * @param AdeAccount $account
-     * @param bool $testEnvironment
      * @return ProfileApi
      */
-    public function createProfileApi(AuthApi $authApi, AdeAccount $account, $testEnvironment = false)
+    public function createProfileApi(AuthApi $authApi, AdeAccount $account)
     {
         return new ProfileApi(
-            $this->getExecutor($testEnvironment),
+            $this->getExecutor($account->isTestMode()),
             $authApi,
             $account
         );
@@ -156,13 +153,12 @@ class ApiFactory
     /**
      * @param AuthApi $authApi
      * @param AdeAccount $account
-     * @param bool $testEnvironment
      * @return ServiceApi
      */
-    public function createServiceApi(AuthApi $authApi, AdeAccount $account, $testEnvironment = false)
+    public function createServiceApi(AuthApi $authApi, AdeAccount $account)
     {
         return new ServiceApi(
-            $this->getExecutor($testEnvironment),
+            $this->getExecutor($account->isTestMode()),
             $authApi,
             $account
         );
@@ -171,13 +167,12 @@ class ApiFactory
     /**
      * @param AuthApi $authApi
      * @param AdeAccount $account
-     * @param bool $testEnvironment
      * @return SenderAddressApi
      */
-    public function createSenderAddressApi(AuthApi $authApi, AdeAccount $account, $testEnvironment = false)
+    public function createSenderAddressApi(AuthApi $authApi, AdeAccount $account)
     {
         return new SenderAddressApi(
-            $this->getExecutor($testEnvironment),
+            $this->getExecutor($account->isTestMode()),
             $authApi,
             $account
         );
@@ -186,13 +181,12 @@ class ApiFactory
     /**
      * @param AuthApi $authApi
      * @param AdeAccount $account
-     * @param bool $testEnvironment
      * @return PostCodeApi
      */
-    public function createPostCodeApi(AuthApi $authApi, AdeAccount $account, $testEnvironment = false)
+    public function createPostCodeApi(AuthApi $authApi, AdeAccount $account)
     {
         return new PostCodeApi(
-            $this->getExecutor($testEnvironment),
+            $this->getExecutor($account->isTestMode()),
             $authApi,
             $account
         );
@@ -201,13 +195,12 @@ class ApiFactory
     /**
      * @param AuthApi $authApi
      * @param AdeAccount $account
-     * @param bool $testEnvironment
      * @return PickupApi
      */
-    public function createPickupApi(AuthApi $authApi, AdeAccount $account, $testEnvironment = false)
+    public function createPickupApi(AuthApi $authApi, AdeAccount $account)
     {
         return new PickupApi(
-            $this->getExecutor($testEnvironment),
+            $this->getExecutor($account->isTestMode()),
             $authApi,
             $account
         );
