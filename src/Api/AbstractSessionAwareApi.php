@@ -52,7 +52,7 @@ abstract class AbstractSessionAwareApi extends AbstractApi implements SessionAwa
     public function getSessionId()
     {
         if (! $this->sessionId) {
-            $this->sessionId = $this->authApi->login($this->account->getUsername(), $this->account->getPassword());
+            $this->sessionId = $this->authApi->login($this->account);
         }
 
         return $this->sessionId;
