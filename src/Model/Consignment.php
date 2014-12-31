@@ -172,6 +172,7 @@ class Consignment {
      *
      * @JMS\Type("string")
      * @JMS\SerializedName("quantity")
+     * @JMS\Groups({"input"})
      *
      * @var string
      */
@@ -184,6 +185,7 @@ class Consignment {
      *
      * @JMS\Type("string")
      * @JMS\SerializedName("weight")
+     * @JMS\Groups({"input"})
      *
      * @var string
      */
@@ -193,7 +195,7 @@ class Consignment {
      * Data nadania, jeśli brak zostanie wstawiona aktualna data [YYYY-MM-DD]
      * (Opcja)
      *
-     * @JMS\Type("DateTime<Y-m-d>")
+     * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\SerializedName("date")
      * @JMS\Groups({"input"})
      *
@@ -243,6 +245,7 @@ class Consignment {
      *
      * @JMS\Type("string")
      * @JMS\SerializedName("srv_ade")
+     * @JMS\Groups({"input"})
      *
      * @var string
      */

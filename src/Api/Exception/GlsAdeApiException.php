@@ -10,7 +10,7 @@ namespace Webit\GlsAde\Api\Exception;
  * Class Error
  * @author Daniel Bojdo <daniel.bojdo@web-it.eu>
  */
-interface GleAdeApiException
+interface GlsAdeApiException
 {
     const ERROR_USER_INSUFFICIENT_PERMISSIONS = 'err_user_insufficient_permissions';
     const ERROR_SESSION_EXPIRED = 'err_sess_expired';

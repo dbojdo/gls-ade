@@ -31,6 +31,7 @@ class ApiFactory
 
     const GLS_ADE_WSDL_TEST = 'https://ade-test.gls-poland.com/adeplus/pm1/ade_webapi.php?wsdl';
     const GLS_ADE_WSDL = 'https://adeplus.gls-poland.com/adeplus/pm1/ade_webapi.php?wsdl';
+
     /**
      * @var SoapClientFactoryInterface
      */
@@ -72,7 +73,7 @@ class ApiFactory
         $this->executorFactory = $executorFactory;
         $this->normalizer = $normalizer;
         $this->hydrator = $hydrator;
-        $this->exceptionFactory;
+        $this->exceptionFactory = $exceptionFactory;
     }
 
     /**

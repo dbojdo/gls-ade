@@ -49,7 +49,7 @@ class Pickup {
     /**
      * Data i czas utworzenia pickup'u (YYYY-MM-DD hh:mm:ss, np. 2012-04-16 14:25:02)
      *
-     * @JMS\Type("DateTime<Y-m-d H:i:s>")
+     * @JMS\Type("DateTime<'Y-m-d H:i:s'>")
      * @JMS\SerializedName("datetime")
      *
      * @var \DateTime

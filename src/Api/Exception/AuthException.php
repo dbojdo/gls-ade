@@ -10,7 +10,7 @@ namespace Webit\GlsAde\Api\Exception;
  * Class AuthException
  * @author Daniel Bojdo <daniel.bojdo@web-it.eu>
  */
-class AuthApiException extends \RuntimeException implements GleAdeApiException
+class AuthApiException extends \RuntimeException implements GlsAdeApiException
 {
     /**
      * @return string

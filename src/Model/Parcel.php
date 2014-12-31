@@ -23,6 +23,7 @@ class Parcel {
      *
      * @JMS\Type("string")
      * @JMS\SerializedName("number")
+     * @JMS\Groups({"input"})
      *
      * @var string
      */
@@ -69,6 +70,7 @@ class Parcel {
      *
      * @JMS\Type("string")
      * @JMS\SerializedName("srv_ade")
+     * @JMS\Groups({"input"})
      *
      * @var string
      */

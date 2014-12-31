@@ -10,7 +10,7 @@ namespace Webit\GlsAde\Api\Exception;
  * Class InvalidInputDataException
  * @author Daniel Bojdo <daniel.bojdo@web-it.eu>
  */
-class InvalidInputDataException extends \InvalidArgumentException implements GleAdeApiException
+class InvalidInputDataException extends \InvalidArgumentException implements GlsAdeApiException
 {
     /**
      * @return string

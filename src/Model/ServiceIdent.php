@@ -81,7 +81,7 @@ class ServiceIdent {
      * Data urodzenia [YYYY-MM-DD]
      * (Opcja)
      *
-     * @JMS\Type("DateTime<Y-m-d>")
+     * @JMS\Type("DateTime<'Y-m-d'>")
      * @JMS\SerializedName("date_birth")
      * @JMS\Groups({"input", "output"})
      *
