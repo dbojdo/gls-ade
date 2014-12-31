@@ -31,7 +31,6 @@ class ApiFactory
 
     const GLS_ADE_WSDL_TEST = 'https://ade-test.gls-poland.com/adeplus/pm1/ade_webapi.php?wsdl';
     const GLS_ADE_WSDL = 'https://adeplus.gls-poland.com/adeplus/pm1/ade_webapi.php?wsdl';
-
     /**
      * @var SoapClientFactoryInterface
      */
@@ -86,7 +85,8 @@ class ApiFactory
         if (isset($this->executor[$key]) == false) {
             $this->executor[$key] = $this->executorFactory->createExecutor(
                 $this->soapClientFactory->createSoapClient(
-                    $testEnvironment ? self::GLS_ADE_WSDL_TEST : self::GLS_ADE_WSDL
+                    $testEnvironment ? self::GLS_ADE_WSDL_TEST : self::GLS_ADE_WSDL,
+                    array('trace' => 1)
                 ),
                 $this->normalizer,
                 $this->hydrator,
