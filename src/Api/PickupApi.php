@@ -90,7 +90,12 @@ class PickupApi extends AbstractSessionAwareApi
     {
         /** @var Consignment $response */
         $response = $this->request('adePickup_GetConsign', array('id' => $id), 'Webit\GlsAde\Model\Consignment');
-        $response->setDispatched(true);
+
+        if ($response) {
+            $response->setId($id);
+            $response->setDispatched(true);
+        }
+
 
         return $response;
     }
