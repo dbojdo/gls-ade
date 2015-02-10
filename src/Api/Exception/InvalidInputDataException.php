@@ -13,6 +13,26 @@ namespace Webit\GlsAde\Api\Exception;
 class InvalidInputDataException extends \InvalidArgumentException implements GlsAdeApiException
 {
     /**
+     * @param \SoapFault $soapFault
+     * @return InvalidInputDataException
+     */
+    public static function createExceptionFromSoapFault(\SoapFault $soapFault)
+    {
+        $exception = new InvalidInputDataException(
+            sprintf(
+                '%s (%s) - %s',
+                $soapFault->faultcode,
+                $soapFault->faultstring,
+                isset($soapFault->faultactor) ? $soapFault->faultactor : 'unknown'
+            ),
+            null,
+            $soapFault
+        );
+
+        return $exception;
+    }
+
+    /**
      * @return string
      */
     public function getApiErrorCode()
@@ -25,4 +45,3 @@ class InvalidInputDataException extends \InvalidArgumentException implements Gls
         return null;
     }
 }
- 

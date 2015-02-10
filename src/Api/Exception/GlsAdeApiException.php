@@ -21,6 +21,9 @@ interface GlsAdeApiException
     const ERROR_USER_INCORRECT_USERNAME_PASSWORD = 'err_user_incorrect_username_password';
     const ERROR_USER_INVALID_RIGHT = 'err_user_invalid_right';
 
+    const ERROR_CONSIGNMENT_NOT_FOUND = 'err_cons_not_found';
+    const ERROR_PICKUP_NOT_FOUND = 'err_pickup_not_found';
+    const ERROR_PICKUP_INVALID_IDENTIFIER = 'err_invalid_identifier';
 
     const ERROR_ZIP_CODE_NOT_FOUND = 'err_zipcode_not_found';
 
@@ -54,7 +57,6 @@ interface GlsAdeApiException
 
     /** Kod pocztowy obiorcy jest pusty. */
     const ERROR_CONSIGNMENT_RECEIVER_ZIPCODE_EMPTY = 'err_cons_receiver_zipcode_empty';
-
 
     /** Kod pocztowy odbiorcy jest niepoprawny. */
     const err_cons_receiver_zipcode_is_invalid = 'err_cons_receiver_zipcode_is_invalid';

@@ -25,12 +25,12 @@ class ExceptionFactory implements ExceptionFactoryInterface
     public function createException(\Exception $e, $soapFunction, $input)
     {
         if ($e instanceof \SoapFault) {
-            throw new InvalidInputDataException(
-                sprintf('%s (%s) - %s', $e->faultcode, $e->faultstring, isset($e->faultactor) ? $e->faultactor : 'unknown'),
-                null,
-                $e
-            );
+            switch ($e->faultcode) {
+                default:
+                    throw InvalidInputDataException::createExceptionFromSoapFault($e);
+            }
         }
+
         return $e;
     }
 }
