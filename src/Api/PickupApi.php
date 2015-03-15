@@ -96,6 +96,33 @@ class PickupApi extends AbstractSessionAwareApi
             $response->setDispatched(true);
         }
 
+        return $response;
+    }
+
+    /**
+     * Metoda daje dostęp do identyfikatorów przesyłek z potwierdzenia nadania o wskazanym identyfikatorze.
+     * Zwracanych jest nie więcej niż 100 identyfikatorów uporządkowanych malejąco.
+     * Pierwsze wywołanie funkcji powinno się odbyć z parametrem id_start = 0.
+     * Zostanie wtedy zwróconych nie więcej niż 100 identyfikatorów uporządkowanych malejąco
+     * (tym samym pierwsze wywołanie funkcji daje zawsze najnowsze identyfikatory) mniejszych niż id_start.
+     * Jeśli zwróconych zostanie mniej niż 100 identyfikatorów, oznacza to że zostały pobrane wszystkie.
+     * Natomiast jeśli zostanie zwróconych 100 identyfikatorów, należy wywołać funkcję przynajmniej jeszcze jeden raz,
+     * podając jako parametr id_start wartość ostatniego elementu tablicy identyfikatorów otrzymanej
+     * w poprzednim wywołaniu. Kolejne wywołanie będzie konieczne, jeśli liczba identyfikatorów bedzie równa 100.
+     * Zatem aby otrzymać pełną listę identyfikatorów należy wywoływać metodę tyle razy, aż na wyjściu pojawi się
+     * tablica z mniej niż 100 identyfikatorami.
+     * @see https://ade-test.gls-poland.com/adeplus/pm1/html/webapi/functions/f_pickup_consign_get_ids.htm
+     *
+     * @param int $pickupId
+     * @param int $idStart
+     * @return ArrayCollection
+     */
+    public function getConsignmentIds($pickupId, $idStart = 0)
+    {
+        $response = $this->request(
+            'adePickup_GetConsignIDs',
+            array('id' => $pickupId, 'id_start' => $idStart)
+        );
 
         return $response;
     }
