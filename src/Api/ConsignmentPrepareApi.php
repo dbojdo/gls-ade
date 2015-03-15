@@ -59,6 +59,26 @@ class ConsignmentPrepareApi extends AbstractSessionAwareApi
     }
 
     /**
+     * @return ArrayCollection
+     */
+    public function getAllConsignmentIds()
+    {
+        $ids = array();
+        $idStart = 0;
+        while ($result = $this->getConsignmentIds($idStart)) {
+            $ids = array_merge($ids, $result->toArray());
+            if ($result->count() < 100) {
+                break;
+            }
+
+            $idStart = end($ids);
+            reset($ids);
+        }
+
+        return new ArrayCollection($ids);
+    }
+
+    /**
      * Metoda daje dostęp do danych przesyłki z przygotowalni.
      * @see https://ade-test.gls-poland.com/adeplus/pm1/html/webapi/functions/f_prepbox_get_consign.htm
      *

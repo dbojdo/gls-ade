@@ -128,6 +128,27 @@ class PickupApi extends AbstractSessionAwareApi
     }
 
     /**
+     * @param int $pickupId
+     * @return ArrayCollection
+     */
+    public function getAllConsignmentIds($pickupId)
+    {
+        $ids = array();
+        $idStart = 0;
+        while ($result = $this->getConsignmentIds($pickupId, $idStart)) {
+            $ids = array_merge($ids, $result->toArray());
+            if ($result->count() < 100) {
+                break;
+            }
+
+            $idStart = end($ids);
+            reset($ids);
+        }
+
+        return new ArrayCollection($ids);
+    }
+
+    /**
      * Metoda pobiera druk potwierdzenia nadania.
      * @see https://ade-test.gls-poland.com/adeplus/pm1/html/webapi/functions/f_pickup_get_receipt.htm
      *
