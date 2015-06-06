@@ -459,6 +459,9 @@ interface GlsAdeApiException
     /** Użytkownik nie może dodawać nowych paczek z powodu blokady windykacyjnej. */
     const err_user_debt_collection_lock = 'err_user_debt_collection_lock';
 
+    /** Data nadania jest nieprawidłowa, ponieważ przypada w dzień wolny od pracy (święto). */
+    const err_date_is_holiday = 'err_date_is_holiday';
+
     /**
      * @return string
      */
