@@ -22,5 +22,10 @@
         "psr-4": {
             "Webit\\GlsAde\\": "src/"
         }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-1.x": "1.x-dev"
+        }
     }
 }
