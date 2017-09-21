@@ -8,6 +8,7 @@
             "email": "daniel.bojdo@web-it.eu"
         }
     ],
+    "license": "MIT",
     "require": {
         "php": ">=5.3.3",
         "doctrine/collections": "~1.2",
