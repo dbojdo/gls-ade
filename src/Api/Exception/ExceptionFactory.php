@@ -2,13 +2,13 @@
 
 namespace Webit\GlsAde\Api\Exception;
 
-use Webit\SoapApi\Exception\ExceptionFactoryInterface;
+use Webit\SoapApi\Executor\Exception\ExecutorException;
 
 /**
  * Class ExceptionFactory
  * @author Daniel Bojdo <daniel.bojdo@web-it.eu>
  */
-class ExceptionFactory implements ExceptionFactoryInterface
+class ExceptionFactory
 {
     /**
      * Wraps exception to API's type
@@ -20,6 +20,11 @@ class ExceptionFactory implements ExceptionFactoryInterface
      */
     public function createException(\Exception $e, $soapFunction, $input)
     {
+        if (! ($e instanceof ExecutorException)) {
+            return $e;
+        }
+
+        $e = $e->getPrevious();
         if ($e instanceof \SoapFault) {
             switch ($e->faultcode) {
                 default:

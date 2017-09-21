@@ -6,6 +6,8 @@ use JMS\Serializer\Serializer;
 use JMS\Serializer\SerializerBuilder;
 use Webit\GlsAde\Api\AuthApi;
 use Webit\GlsAde\Api\ConsignmentPrepareApi;
+use Webit\GlsAde\Api\Exception\ExceptionFactory;
+use Webit\GlsAde\Api\Exception\ExceptionWrappingExecutor;
 use Webit\GlsAde\Api\MpkApi;
 use Webit\GlsAde\Api\PickupApi;
 use Webit\GlsAde\Api\PostCodeApi;
@@ -67,7 +69,9 @@ class ApiFactory
 
         $executorBuilder->setWsdl($testEnvironment ? self::GLS_ADE_WSDL_TEST : self::GLS_ADE_WSDL);
 
-        $this->executor[$key] = $executor = $executorBuilder->build();
+        $executor = new ExceptionWrappingExecutor($executorBuilder->build(), new ExceptionFactory());
+
+        $this->executor[$key] = $executor;
 
         return $executor;
     }
