@@ -1,29 +1,16 @@
 <?php
-/**
- * File AdeAccount.php
- * Created at: 2014-12-06 04-18
- *
- * @author Daniel Bojdo <daniel.bojdo@web-it.eu>
- */
 
 namespace Webit\GlsAde\Model;
 
-
 class AdeAccount
 {
-    /**
-     * @var string
-     */
+    /** @var string */
     private $username;
 
-    /**
-     * @var string
-     */
+    /** @var string */
     private $password;
 
-    /**
-     * @var bool
-     */
+    /** @var bool */
     private $testMode;
 
     /**

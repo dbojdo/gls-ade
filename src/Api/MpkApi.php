@@ -1,10 +1,8 @@
 <?php
-/**
- * File: MpkApi.php
- * Created at: 2014-11-24 06:21
- */
- 
+
 namespace Webit\GlsAde\Api;
+
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Class MpkApi
@@ -42,13 +40,14 @@ class MpkApi extends AbstractSessionAwareApi
      *
      * @see https://ade-test.gls-poland.com/adeplus/pm1/html/webapi/functions/f_pfc_get_dictionary.htm
      *
-     * @return array
+     * @return string
      */
     public function getMpkDictionary()
     {
+        /** @var ArrayCollection $response */
         $response = $this->request('adePfc_GetDictionary');
 
-        return $response;
+        return $response->count() ? $response->get(0) : null;
     }
 }
  

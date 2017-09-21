@@ -1,9 +1,5 @@
 <?php
-/**
- * File: ServiceApi.php
- * Created at: 2014-11-24 05:42
- */
- 
+
 namespace Webit\GlsAde\Api;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -27,7 +23,7 @@ class ServiceApi extends AbstractSessionAwareApi
     public function getAllowedServices()
     {
         /** @var ServiceList $response */
-        $response = $this->request('adeServices_GetAllowed', null, 'Webit\GlsAde\Model\ServiceList');
+        $response = $this->request('adeServices_GetAllowed');
 
         return $response;
     }
@@ -36,14 +32,14 @@ class ServiceApi extends AbstractSessionAwareApi
      * Metoda pozwala na uzyskanie maksymalnej dla danego użytkownika kwoty dla usługi COD (kwoty pobrania za towar).
      * @see https://ade-test.gls-poland.com/adeplus/pm1/html/webapi/functions/f_srv_cod_max.htm
      *
-     * @return string
+     * @return float
      */
     public function getMaxCodAmount()
     {
         /** @var ArrayCollection $response */
         $response = $this->request('adeServices_GetMaxCOD');
 
-        return $response->get('cod_max');
+        return (float)$response->get('cod_max');
     }
 
     /**
@@ -56,7 +52,7 @@ class ServiceApi extends AbstractSessionAwareApi
     public function getMaxParcelsWeight()
     {
         /** @var MaxParcelWeight $response */
-        $response = $this->request('adeServices_GetMaxParcelWeights', null, 'Webit\GlsAde\Model\MaxParcelWeight');
+        $response = $this->request('adeServices_GetMaxParcelWeights');
 
         return $response;
     }
@@ -79,8 +75,7 @@ class ServiceApi extends AbstractSessionAwareApi
         /** @var ServiceList $response */
         $response = $this->request(
             'adeServices_GetGuaranteed',
-            array('zipcode' => $zipCode),
-            'Webit\GlsAde\Model\ServiceList'
+            array('zipcode' => $zipCode)
         );
 
         return $response;

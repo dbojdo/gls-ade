@@ -1,9 +1,5 @@
 <?php
-/**
- * File: SenderAddressApi.php
- * Created at: 2014-11-24 06:24
- */
- 
+
 namespace Webit\GlsAde\Api;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -39,6 +35,7 @@ class SenderAddressApi extends AbstractSessionAwareApi
     {
         /** @var ArrayCollection $response */
         $response = $this->request('adeSendAddr_GetStatus');
+
         return $response->get('status');
     }
 
@@ -51,16 +48,12 @@ class SenderAddressApi extends AbstractSessionAwareApi
      *
      * @see https://ade-test.gls-poland.com/adeplus/pm1/html/webapi/functions/f_sendaddr_get_dictionary.htm
      *
-     * @return array
+     * @return ArrayCollection
      */
     public function getSenderAddressDictionary()
     {
         /** @var ArrayCollection $response */
-        $response = $this->request(
-            'adeSendAddr_GetDictionary',
-            null,
-            'ArrayCollection<Webit\GlsAde\Model\SenderAddress>'
-        );
+        $response = $this->request('adeSendAddr_GetDictionary');
 
         return $response;
     }

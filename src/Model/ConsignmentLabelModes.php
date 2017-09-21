@@ -1,9 +1,5 @@
 <?php
-/**
- * File: ConsignmentLabelModes.php
- * Created at: 2014-11-24 06:09
- */
- 
+
 namespace Webit\GlsAde\Model;
 
 /**

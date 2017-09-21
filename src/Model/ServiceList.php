@@ -1,10 +1,4 @@
 <?php
-/**
- * ServiceList.php
- *
- * @author dbojdo - Daniel Bojdo <daniel.bojdo@web-it.eu>
- * Created on Nov 24, 2014, 13:26
- */
 
 namespace Webit\GlsAde\Model;
 

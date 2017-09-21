@@ -1,6 +1,0 @@
-suites:
-    shipment_suit:
-        namespace: Webit\GlsAde\
-        spec_prefix: spec
-        psr4_prefix: Webit\GlsAde
-        spec_path: tests/

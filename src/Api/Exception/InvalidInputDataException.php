@@ -1,9 +1,5 @@
 <?php
-/**
- * File: InvalidInputDataException.php
- * Created at: 2014-11-24 07:04
- */
- 
+
 namespace Webit\GlsAde\Api\Exception;
 
 /**

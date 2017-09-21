@@ -1,11 +1,9 @@
 <?php
-/**
- * File: ApiFactory.php
- * Created at: 2014-11-21 22:04
- */
- 
+
 namespace Webit\GlsAde\Api\Factory;
 
+use JMS\Serializer\Serializer;
+use JMS\Serializer\SerializerBuilder;
 use Webit\GlsAde\Api\AuthApi;
 use Webit\GlsAde\Api\ConsignmentPrepareApi;
 use Webit\GlsAde\Api\MpkApi;
@@ -15,12 +13,14 @@ use Webit\GlsAde\Api\ProfileApi;
 use Webit\GlsAde\Api\SenderAddressApi;
 use Webit\GlsAde\Api\ServiceApi;
 use Webit\GlsAde\Model\AdeAccount;
-use Webit\SoapApi\Exception\ExceptionFactoryInterface;
-use Webit\SoapApi\Hydrator\HydratorInterface;
-use Webit\SoapApi\Input\InputNormalizerInterface;
-use Webit\SoapApi\SoapApiExecutor;
-use Webit\SoapApi\SoapApiExecutorFactory;
-use Webit\SoapApi\SoapClient\SoapClientFactoryInterface;
+use Webit\SoapApi\Executor\SoapApiExecutorBuilder;
+use Webit\SoapApi\Hydrator\ArrayHydrator;
+use Webit\SoapApi\Hydrator\ChainHydrator;
+use Webit\SoapApi\Hydrator\HydratorSerializerBased;
+use Webit\SoapApi\Hydrator\Serializer\ResultTypeMap;
+use Webit\SoapApi\Input\InputNormaliserSerializerBased;
+use Webit\SoapApi\Input\Serializer\StaticSerializationContextFactory;
+use Webit\SoapApi\Util\StdClassToArray;
 
 /**
  * Class ApiFactory
@@ -28,74 +28,48 @@ use Webit\SoapApi\SoapClient\SoapClientFactoryInterface;
  */
 class ApiFactory
 {
-
     const GLS_ADE_WSDL_TEST = 'https://ade-test.gls-poland.com/adeplus/pm1/ade_webapi.php?wsdl';
     const GLS_ADE_WSDL = 'https://adeplus.gls-poland.com/adeplus/pm1/ade_webapi.php?wsdl';
-    /**
-     * @var SoapClientFactoryInterface
-     */
-    private $soapClientFactory;
 
-    /**
-     * @var SoapApiExecutorFactory
-     */
-    private $executorFactory;
-
-    /**
-     * @var InputNormalizerInterface
-     */
-    private $normalizer;
-
-    /**
-     * @var HydratorInterface
-     */
-    private $hydrator;
-
-    /**
-     * @var ExceptionFactoryInterface
-     */
-    private $exceptionFactory;
-
-    /**
-     * @var array
-     */
+    /** @var array */
     private $executor = array();
 
-    public function __construct(
-        SoapClientFactoryInterface $soapClientFactory,
-        SoapApiExecutorFactory $executorFactory,
-        InputNormalizerInterface $normalizer,
-        HydratorInterface $hydrator,
-        ExceptionFactoryInterface $exceptionFactory
-    ) {
-        $this->soapClientFactory = $soapClientFactory;
-        $this->executorFactory = $executorFactory;
-        $this->normalizer = $normalizer;
-        $this->hydrator = $hydrator;
-        $this->exceptionFactory = $exceptionFactory;
+    /**
+     * @return ApiFactory
+     */
+    public static function create()
+    {
+        return new self();
     }
 
     /**
      * @param bool $testEnvironment
-     * @return \SoapClient|SoapApiExecutor
+     * @return \Webit\SoapApi\Executor\SoapApiExecutor
      */
     private function getExecutor($testEnvironment = false)
     {
         $key = $testEnvironment ? 'test' : 'prod';
-        if (isset($this->executor[$key]) == false) {
-            $this->executor[$key] = $this->executorFactory->createExecutor(
-                $this->soapClientFactory->createSoapClient(
-                    $testEnvironment ? self::GLS_ADE_WSDL_TEST : self::GLS_ADE_WSDL,
-                    array('trace' => 1)
-                ),
-                $this->normalizer,
-                $this->hydrator,
-                null,
-                $this->exceptionFactory
-            );
+        if (isset($this->executor[$key])) {
+            return $this->executor[$key];
         }
 
-        return $this->executor[$key];
+        $serializer = SerializerBuilder::create()->build();
+
+        $executorBuilder = new SoapApiExecutorBuilder();
+        $executorBuilder->setInputNormaliser(
+            new InputNormaliserSerializerBased(
+                $serializer,
+                new StaticSerializationContextFactory(array(), true)
+            )
+        );
+
+        $executorBuilder->setHydrator($this->hydrator($serializer));
+
+        $executorBuilder->setWsdl($testEnvironment ? self::GLS_ADE_WSDL_TEST : self::GLS_ADE_WSDL);
+
+        $this->executor[$key] = $executor = $executorBuilder->build();
+
+        return $executor;
     }
 
     /**
@@ -110,100 +84,124 @@ class ApiFactory
     }
 
     /**
-     * @param AuthApi $authApi
      * @param AdeAccount $account
      * @return MpkApi
      */
-    public function createMpkApi(AuthApi $authApi, AdeAccount $account)
+    public function createMpkApi(AdeAccount $account)
     {
         return new MpkApi(
             $this->getExecutor($account->isTestMode()),
-            $authApi,
+            $this->createAuthApi($account->isTestMode()),
             $account
         );
     }
 
     /**
-     * @param AuthApi $authApi
      * @param AdeAccount $account
      * @return ConsignmentPrepareApi
      */
-    public function createConsignmentPrepareApi(AuthApi $authApi, AdeAccount $account)
+    public function createConsignmentPrepareApi(AdeAccount $account)
     {
         return new ConsignmentPrepareApi(
             $this->getExecutor($account->isTestMode()),
-            $authApi,
+            $this->createAuthApi($account->isTestMode()),
             $account
         );
     }
 
     /**
-     * @param AuthApi $authApi
      * @param AdeAccount $account
      * @return ProfileApi
      */
-    public function createProfileApi(AuthApi $authApi, AdeAccount $account)
+    public function createProfileApi(AdeAccount $account)
     {
         return new ProfileApi(
             $this->getExecutor($account->isTestMode()),
-            $authApi,
+            $this->createAuthApi($account->isTestMode()),
             $account
         );
     }
 
     /**
-     * @param AuthApi $authApi
      * @param AdeAccount $account
      * @return ServiceApi
      */
-    public function createServiceApi(AuthApi $authApi, AdeAccount $account)
+    public function createServiceApi(AdeAccount $account)
     {
         return new ServiceApi(
             $this->getExecutor($account->isTestMode()),
-            $authApi,
+            $this->createAuthApi($account->isTestMode()),
             $account
         );
     }
 
     /**
-     * @param AuthApi $authApi
      * @param AdeAccount $account
      * @return SenderAddressApi
      */
-    public function createSenderAddressApi(AuthApi $authApi, AdeAccount $account)
+    public function createSenderAddressApi(AdeAccount $account)
     {
         return new SenderAddressApi(
             $this->getExecutor($account->isTestMode()),
-            $authApi,
+            $this->createAuthApi($account->isTestMode()),
             $account
         );
     }
 
     /**
-     * @param AuthApi $authApi
      * @param AdeAccount $account
      * @return PostCodeApi
      */
-    public function createPostCodeApi(AuthApi $authApi, AdeAccount $account)
+    public function createPostCodeApi(AdeAccount $account)
     {
         return new PostCodeApi(
             $this->getExecutor($account->isTestMode()),
-            $authApi,
+            $this->createAuthApi($account->isTestMode()),
             $account
         );
     }
 
     /**
-     * @param AuthApi $authApi
      * @param AdeAccount $account
      * @return PickupApi
      */
-    public function createPickupApi(AuthApi $authApi, AdeAccount $account)
+    public function createPickupApi(AdeAccount $account)
     {
         return new PickupApi(
             $this->getExecutor($account->isTestMode()),
-            $authApi,
+            $this->createAuthApi($account->isTestMode()),
             $account
+        );
+    }
+
+    /**
+     * @param Serializer $serializer
+     * @return ChainHydrator
+     */
+    private function hydrator(Serializer $serializer)
+    {
+        return new ChainHydrator(
+            array(
+                new ArrayHydrator(new StdClassToArray()),
+                new HydratorSerializerBased(
+                    $serializer,
+                    new ResultTypeMap(
+                        array(
+                            'adeProfile_GetIDs' => 'ArrayCollection<Webit\GlsAde\Model\Profile>',
+                            'adeProfile_Change' => 'Webit\GlsAde\Model\Profile',
+                            'adePreparingBox_GetConsign' => 'Webit\GlsAde\Model\Consignment',
+                            'adePickup_Get' => 'Webit\GlsAde\Model\Pickup',
+                            'adePickup_GetConsign' => 'Webit\GlsAde\Model\Consignment',
+                            'adePickup_ParcelNumberSearch' => 'Webit\GlsAde\Model\Consignment',
+                            'adeSendAddr_GetDictionary' => 'ArrayCollection<Webit\GlsAde\Model\SenderAddress>',
+                            'adeServices_GetAllowed' => 'Webit\GlsAde\Model\ServiceList',
+                            'adeServices_GetMaxParcelWeights' => 'Webit\GlsAde\Model\MaxParcelWeight',
+                            'adeServices_GetGuaranteed' => 'Webit\GlsAde\Model\ServiceList'
+                        ),
+                        'ArrayCollection'
+                    )
+                )
+            )
         );
     }
 }

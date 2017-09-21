@@ -1,9 +1,5 @@
 <?php
-/**
- * File: ProfileApi.php
- * Created at: 2014-11-24 05:28
- */
- 
+
 namespace Webit\GlsAde\Api;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -28,7 +24,7 @@ class ProfileApi extends AbstractSessionAwareApi
      */
     public function getProfiles()
     {
-        $profiles = $this->request('adeProfile_GetIDs', null, 'ArrayCollection<Webit\GlsAde\Model\Profile>');
+        $profiles = $this->request('adeProfile_GetIDs');
 
         return $profiles;
     }
@@ -43,7 +39,6 @@ class ProfileApi extends AbstractSessionAwareApi
     public function changeProfile($profileId)
     {
         $profile = $this->request('adeProfile_Change', array('id' => $profileId), 'Webit\GlsAde\Model\Profile');
-        // Profile - Tablica z informacjami na temat profilu, na który nastąpiła zmiana.
 
         return $profile;
     }

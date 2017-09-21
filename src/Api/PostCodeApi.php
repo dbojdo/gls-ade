@@ -1,9 +1,5 @@
 <?php
-/**
- * File: PostCodeApi.php
- * Created at: 2014-11-24 05:55
- */
- 
+
 namespace Webit\GlsAde\Api;
 
 use Doctrine\Common\Collections\ArrayCollection;

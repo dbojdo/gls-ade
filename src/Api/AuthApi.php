@@ -21,7 +21,11 @@ class AuthApi extends AbstractApi
     {
         /** @var ArrayCollection $result */
         $result = $this->request(
-            'adeLogin', array('user_name' => $account->getUsername(), 'password' => $account->getPassword())
+            'adeLogin',
+            array(
+                'user_name' => $account->getUsername(),
+                'password' => $account->getPassword()
+            )
         );
 
         return $result->get('session');

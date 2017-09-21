@@ -1,9 +1,5 @@
 <?php
-/**
- * File: PickupApi.php
- * Created at: 2014-11-24 06:28
- */
- 
+
 namespace Webit\GlsAde\Api;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -74,7 +70,7 @@ class PickupApi extends AbstractSessionAwareApi
      */
     public function getPickup($id)
     {
-        $response = $this->request('adePickup_Get', array('id' => $id), 'Webit\GlsAde\Model\Pickup');
+        $response = $this->request('adePickup_Get', array('id' => $id));
 
         return $response;
     }
@@ -89,7 +85,7 @@ class PickupApi extends AbstractSessionAwareApi
     public function getConsignment($id)
     {
         /** @var Consignment $response */
-        $response = $this->request('adePickup_GetConsign', array('id' => $id), 'Webit\GlsAde\Model\Consignment');
+        $response = $this->request('adePickup_GetConsign', array('id' => $id));
 
         if ($response) {
             $response->setId($id);
@@ -153,16 +149,14 @@ class PickupApi extends AbstractSessionAwareApi
      * @see https://ade-test.gls-poland.com/adeplus/pm1/html/webapi/functions/f_pickup_get_receipt.htm
      *
      * @param int $id
-     * @return \SplFileInfo
+     * @param string $mode
+     * @return string
      */
     public function getPickupReceipt($id, $mode = PickupReceiptModes::MODE_CONDENSED)
     {
         $response = $this->request('adePickup_GetReceipt', array('id' => $id, 'mode' => $mode));
 
-        $file = new \SplFileInfo(tempnam(sys_get_temp_dir(), 'receipt'));
-        file_put_contents($file->getPathname(), base64_decode($response->get('receipt')));
-
-        return $file;
+        return base64_decode($response->get('receipt'));
     }
 
     /**
@@ -177,10 +171,7 @@ class PickupApi extends AbstractSessionAwareApi
     {
         $response = $this->request('adePickup_GetLabels', array('id' => $id, 'mode' => $mode));
 
-        $file = new \SplFileInfo(tempnam(sys_get_temp_dir(), 'label'));
-        file_put_contents($file->getPathname(), base64_decode($response->get('labels')));
-
-        return $file;
+        return base64_decode($response->get('labels'));
     }
 
     /**
@@ -192,10 +183,7 @@ class PickupApi extends AbstractSessionAwareApi
     public function getIdentPrint($id)
     {
         $response = $this->request('adePickup_GetIdent', array('id' => $id));
-        $file = new \SplFileInfo(tempnam(sys_get_temp_dir(), 'ident'));
-        file_put_contents($file->getPathname(), base64_decode($response->get('ident')));
-
-        return $file;
+        return base64_decode($response->get('ident'));
     }
 
     /**
@@ -210,10 +198,7 @@ class PickupApi extends AbstractSessionAwareApi
     {
         $response = $this->request('adePickup_GetConsignLabels', array('id' => $id, 'mode' => $mode));
 
-        $file = new \SplFileInfo(tempnam(sys_get_temp_dir(), 'label'));
-        file_put_contents($file->getPathname(), base64_decode($response->get('labels')));
-
-        return $file;
+        return base64_decode($response->get('labels'));
     }
 
     /**
@@ -229,8 +214,7 @@ class PickupApi extends AbstractSessionAwareApi
     {
         $response = $this->request(
             'adePickup_ParcelNumberSearch',
-            array('number' => $number),
-            'Webit\GlsAde\Model\Consignment'
+            array('number' => $number)
         );
 
         return $response;

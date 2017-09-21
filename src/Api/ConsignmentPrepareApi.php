@@ -1,9 +1,5 @@
 <?php
-/**
- * File: ConsignmentPrepareApi.php
- * Created at: 2014-11-24 05:58
- */
- 
+
 namespace Webit\GlsAde\Api;
 
 use Doctrine\Common\Collections\ArrayCollection;
@@ -88,7 +84,7 @@ class ConsignmentPrepareApi extends AbstractSessionAwareApi
     public function getConsignment($id)
     {
         /** @var Consignment $response */
-        $response = $this->request('adePreparingBox_GetConsign', array('id' => $id), 'Webit\GlsAde\Model\Consignment');
+        $response = $this->request('adePreparingBox_GetConsign', array('id' => $id));
 
         if ($response) {
             $response->setId($id);
@@ -123,16 +119,13 @@ class ConsignmentPrepareApi extends AbstractSessionAwareApi
      *
      * @param int $id
      * @param string $mode
-     * @return \SplFileInfo
+     * @return string
      */
     public function getConsignmentLabels($id, $mode = ConsignmentLabelModes::MODE_ONE_LABEL_ON_A4_PDF)
     {
         $response = $this->request('adePreparingBox_GetConsignLabels', array('id' => $id, 'mode' => $mode));
 
-        $file = new \SplFileInfo(tempnam(sys_get_temp_dir(), 'label'));
-        file_put_contents($file->getPathname(), base64_decode($response->get('labels')));
-
-        return $file;
+        return base64_decode($response->get('labels'));
     }
 
     /**
@@ -148,15 +141,9 @@ class ConsignmentPrepareApi extends AbstractSessionAwareApi
     {
         $response = $this->request('adePreparingBox_GetConsignDocs', array('id' => $id, $mode => $mode));
 
-        $labels = new \SplFileInfo(tempnam(sys_get_temp_dir(), 'label'));
-        file_put_contents($labels->getPathname(), base64_decode($response->get('labels')));
-
-        $ident = null;
-        if ($response->get('ident')) {
-            $ident = new \SplFileInfo(tempnam(sys_get_temp_dir(), 'ident'));
-            file_put_contents($labels->getPathname(), base64_decode($response->get('ident')));
-        }
-
-        return new ConsignmentDocuments($labels, $ident);
+        return new ConsignmentDocuments(
+            $response->get('labels') ? base64_decode($response->get('labels')) : null,
+            $response->get('ident') ? base64_decode($response->get('ident')) : null
+        );
     }
 }

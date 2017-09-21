@@ -1,9 +1,5 @@
 <?php
-/**
- * File: AuthException.php
- * Created at: 2014-11-24 06:59
- */
- 
+
 namespace Webit\GlsAde\Api\Exception;
 
 /**

@@ -1,9 +1,5 @@
 <?php
-/**
- * File: Profile.php
- * Created at: 2014-11-21 21:50
- */
- 
+
 namespace Webit\GlsAde\Model;
 
 use JMS\Serializer\Annotation as JMS;

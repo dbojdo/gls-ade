@@ -1,9 +1,5 @@
 <?php
-/**
- * File: PickupReceiptModes.php
- * Created at: 2014-11-24 06:39
- */
- 
+
 namespace Webit\GlsAde\Model;
 
 /**

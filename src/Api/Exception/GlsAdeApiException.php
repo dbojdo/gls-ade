@@ -1,9 +1,5 @@
 <?php
-/**
- * File: Error.php
- * Created at: 2014-11-21 20:28
- */
- 
+
 namespace Webit\GlsAde\Api\Exception;
 
 /**

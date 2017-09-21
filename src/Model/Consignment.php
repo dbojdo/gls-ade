@@ -1,9 +1,5 @@
 <?php
-/**
- * File: Consign.php
- * Created at: 2014-11-21 20:25
- */
- 
+
 namespace Webit\GlsAde\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;

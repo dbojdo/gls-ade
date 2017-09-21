@@ -1,15 +1,8 @@
 <?php
-/**
- * File: AbstractApi.php
- * Created at: 2014-11-21 20:40
- */
- 
+
 namespace Webit\GlsAde\Api;
 
-use JMS\Serializer\SerializationContext;
-use JMS\Serializer\SerializerInterface;
-use Webit\GlsAde\Api\ResultMap\ResultTypeMapInterface;
-use Webit\SoapApi\SoapApiExecutorInterface;
+use Webit\SoapApi\Executor\SoapApiExecutor;
 
 /**
  * Class AbstractApi
@@ -17,15 +10,13 @@ use Webit\SoapApi\SoapApiExecutorInterface;
  */
 abstract class AbstractApi
 {
-    /**
-     * @var SoapApiExecutorInterface
-     */
+    /** @var SoapApiExecutor */
     private $executor;
 
     /**
-     * @param SoapApiExecutorInterface $executor
+     * @param SoapApiExecutor $executor
      */
-    public function __construct(SoapApiExecutorInterface $executor)
+    public function __construct(SoapApiExecutor $executor)
     {
         $this->executor = $executor;
     }
@@ -33,11 +24,10 @@ abstract class AbstractApi
     /**
      * @param string $soapFunction
      * @param mixed $arguments
-     * @param string $resultType
      * @return mixed
      */
-    protected function request($soapFunction, $arguments = null, $resultType = 'ArrayCollection')
+    protected function request($soapFunction, $arguments = null)
     {
-        return $this->executor->executeSoapFunction($soapFunction, $arguments, $resultType);
+        return $this->executor->executeSoapFunction($soapFunction, $arguments);
     }
 }

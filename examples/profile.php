@@ -4,8 +4,7 @@ $apiFactory = require 'bootstrap.php';
 
 /** @var array $config */
 
-$authApi = $apiFactory->createAuthApi($config['test-env']);
-$profileApi = $apiFactory->createProfileApi($authApi, $account);
+$profileApi = $apiFactory->createProfileApi($account);
 $profiles = $profileApi->getProfiles();
 
 echo "Profiles:\n";
