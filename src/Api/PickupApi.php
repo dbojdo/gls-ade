@@ -165,7 +165,7 @@ class PickupApi extends AbstractSessionAwareApi
      *
      * @param int $id
      * @param string $mode
-     * @return \SplFileInfo
+     * @return string
      */
     public function getPickupLabels($id, $mode = ConsignmentLabelModes::MODE_ONE_LABEL_ON_A4_PDF)
     {
@@ -178,7 +178,7 @@ class PickupApi extends AbstractSessionAwareApi
      * Metoda pobiera druki IDENT z potwierdzenia nadania.
      * @see https://ade-test.gls-poland.com/adeplus/pm1/html/webapi/functions/f_pickup_get_ident.htm
      * @param int $id
-     * @return \SplFileInfo
+     * @return string
      */
     public function getIdentPrint($id)
     {
@@ -192,7 +192,7 @@ class PickupApi extends AbstractSessionAwareApi
      *
      * @param int $id
      * @param string $mode
-     * @return \SplFileInfo
+     * @return string
      */
     public function getConsignmentLabels($id, $mode = ConsignmentLabelModes::MODE_ONE_LABEL_ON_A4_PDF)
     {
